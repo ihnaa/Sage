@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Cottage Hub - Peso Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400&family=Quicksand:wght@300;500&display=swap" rel="stylesheet">
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --sage: #8A9A5B;
+            --forest: #4F5D2F;
+            --cream: #FDFBF7;
+            --parchment: #F5F2E9;
+            --clay: #B07D62;
+            --earth: #5C4033;
+            --over: #C04848;
+        }
+
+        body {
+            background-color: var(--parchment);
+            background-image: url("https://www.transparenttextures.com/patterns/paper-fibers.png");
+            font-family: 'Quicksand', sans-serif;
+            color: var(--earth);
+        }
+
+        h1, h2, h3, .serif { font-family: 'Lora', serif; }
+
+        .cottage-card {
+            background: var(--cream);
+            border: 1px solid #E2DCC8;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(79, 93, 47, 0.05);
+        }
+
+        .limit-normal { color: var(--forest); }
+        .limit-warning { color: #d97706; font-weight: bold; } /* Orange */
+        .limit-danger { color: var(--over); font-weight: bold; text-decoration: underline; }
+
+        input, select {
+            background: #fff;
+            border: 1px solid #D1CCBD !important;
+            border-radius: 8px !important;
+            padding: 6px 10px;
+        }
+
+        #calendar {
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            height: 450px;
+        }
+
+        .btn-action {
+            background-color: var(--sage);
+            color: white;
+            transition: all 0.2s;
+        }
+        .btn-action:hover { background-color: var(--forest); }
+    </style>
+</head>
+<body class="p-4 md:p-6">
+
+    <div class="max-w-7xl mx-auto">
+        <!-- HEADER -->
+        <header class="flex flex-col md:flex-row justify-between items-center mb-8 border-b border-sage/20 pb-6">
+            <div class="text-center md:text-left">
+                <h1 class="text-3xl font-bold text-forest mb-1 italic">🌿 My Life Dashboard</h1>
+                <p class="text-clay italic" id="current-date"></p>
+            </div>
+            <div class="flex gap-2 mt-4 md:mt-0">
+                <button onclick="exportData()" class="text-xs bg-white border border-sage px-4 py-2 rounded-full hover:bg-cream">
+                    <i class="fas fa-sync mr-1"></i> Copy Backup (Sync)
+                </button>
+                <button onclick="importData()" class="text-xs bg-forest text-white px-4 py-2 rounded-full">
+                    <i class="fas fa-file-import mr-1"></i> Restore
+                </button>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <!-- LEFT COLUMN: BUDGET & BILLS (4/12) -->
+            <div class="lg:col-span-4 space-y-6">
+                
+                <!-- Fixed Schedule Info -->
+                <div class="cottage-card p-5 bg-sage/10 border-sage/30">
+                    <h2 class="text-lg font-bold text-forest mb-3">📅 Fixed Schedule</h2>
+                    <div class="text-sm space-y-2">
+                        <div class="flex justify-between"><span>10th:</span> <span>Salary 💰 & Rent 🏠</span></div>
+                        <div class="flex justify-between"><span>25th:</span> <span>Salary 💰 & Utilities 💧</span></div>
+                    </div>
+                </div>
+
+                <!-- Expense Logger Form -->
+                <div class="cottage-card p-5">
+                    <h2 class="text-lg font-bold text-forest mb-4 italic">Log Daily Spending</h2>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="text-xs font-bold uppercase text-clay">Category</label>
+                            <select id="log-category" class="w-full mt-1">
+                                <option value="grocery">🛒 Grocery</option>
+                                <option value="dineout">🍽️ Dine Out</option>
+                                <option value="transport">🚗 Transport</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold uppercase text-clay">Amount (₱)</label>
+                            <input type="number" id="log-amount" class="w-full mt-1" placeholder="0.00">
+                        </div>
+                        <button onclick="addExpense()" class="w-full btn-action py-2 rounded-lg font-bold">Add Entry</button>
+                    </div>
+                </div>
+
+                <!-- Weekly Status -->
+                <div class="cottage-card p-5 border-l-4 border-clay">
+                    <h2 class="text-lg font-bold text-forest mb-4 italic">This Week's Status</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span>Groceries (Limit ₱2k)</span>
+                                <span id="grocery-total" class="font-bold">₱0</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-1.5">
+                                <div id="grocery-bar" class="bg-sage h-1.5 rounded-full" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span>Dine Out (Limit ₱1k)</span>
+                                <span id="dineout-total" class="font-bold">₱0</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-1.5">
+                                <div id="dineout-bar" class="bg-sage h-1.5 rounded-full" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="pt-2 border-t flex justify-between">
+                            <span class="text-sm">Transport:</span>
+                            <span id="transport-total" class="font-bold">₱0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MIDDLE COLUMN: MARKET LIST (3/12) -->
+            <div class="lg:col-span-3">
+                <div class="cottage-card p-5 h-full flex flex-col">
+                    <h2 class="text-lg font-bold text-forest mb-4 flex items-center italic">
+                        <i class="fas fa-leaf mr-2 text-sage"></i> Market List
+                    </h2>
+                    <div class="flex mb-4">
+                        <input type="text" id="grocery-input" class="flex-1 rounded-l-lg border-r-0 text-sm" placeholder="Add item...">
+                        <button onclick="addGroceryItem()" class="btn-action px-3 rounded-r-lg"><i class="fas fa-plus"></i></button>
+                    </div>
+                    <ul id="grocery-ul" class="space-y-2 overflow-y-auto max-h-[400px]"></ul>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN: CALENDAR (5/12) -->
+            <div class="lg:col-span-5">
+                <div class="cottage-card p-5 h-full">
+                    <h2 class="text-lg font-bold text-forest mb-4 italic">Gatherings & Dates</h2>
+                    <div id='calendar'></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Data Structure
+        let data = {
+            expenses: [], // Array of {category, amount, date}
+            groceries: [], // Array of {text, checked}
+            customEvents: [] // Array of {title, start}
+        };
+
+        const LIMITS = { grocery: 2000, dineout: 1000 };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            updateDashboard();
+            initCalendar();
+            document.getElementById('current-date').innerText = new Date().toLocaleDateString('en-PH', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+        });
+
+        function initCalendar() {
+            const calendarEl = document.getElementById('calendar');
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+
+            // Generate recurring events
+            const fixedEvents = [
+                { title: '💰 Salary', start: `${year}-${month}-10`, color: '#8A9A5B' },
+                { title: '💰 Salary', start: `${year}-${month}-25`, color: '#8A9A5B' },
+                { title: '🏠 Rent Due', start: `${year}-${month}-10`, color: '#B07D62' },
+                { title: '💧 Utilities', start: `${year}-${month}-25`, color: '#B07D62' }
+            ];
+
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                headerToolbar: { left: 'prev,next', center: 'title', right: '' },
+                events: [...fixedEvents, ...data.customEvents],
+                height: 'auto',
+                eventClick: function(info) {
+                    alert(info.event.title + "\nDate: " + info.event.start.toLocaleDateString());
+                }
+            });
+            calendar.render();
+        }
+
+        // --- EXPENSE LOGIC ---
+        function addExpense() {
+            const cat = document.getElementById('log-category').value;
+            const amt = parseFloat(document.getElementById('log-amount').value);
+            if (!amt) return;
+
+            data.expenses.push({
+                category: cat,
+                amount: amt,
+                date: new Date().toISOString()
+            });
+
+            document.getElementById('log-amount').value = '';
+            saveData();
+            updateDashboard();
+        }
+
+        function updateDashboard() {
+            // Get current week dates
+            const now = new Date();
+            const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay()));
+            startOfWeek.setHours(0,0,0,0);
+
+            const totals = { grocery: 0, dineout: 0, transport: 0 };
+
+            data.expenses.forEach(exp => {
+                const expDate = new Date(exp.date);
+                if (expDate >= startOfWeek) {
+                    totals[exp.category] += exp.amount;
+                }
+            });
+
+            // Update UI & Colors
+            updateStatusUI('grocery', totals.grocery, LIMITS.grocery);
+            updateStatusUI('dineout', totals.dineout, LIMITS.dineout);
+            document.getElementById('transport-total').innerText = `₱${totals.transport.toLocaleString()}`;
+            
+            renderGroceries();
+        }
+
+        function updateStatusUI(id, current, limit) {
+            const textEl = document.getElementById(`${id}-total`);
+            const barEl = document.getElementById(`${id}-bar`);
+            const percent = Math.min((current / limit) * 100, 100);
+
+            textEl.innerText = `₱${current.toLocaleString()}`;
+            barEl.style.width = percent + '%';
+
+            // Color Logic
+            textEl.className = 'font-bold';
+            barEl.style.backgroundColor = 'var(--sage)';
+
+            if (current >= limit) {
+                textEl.classList.add('limit-danger');
+                barEl.style.backgroundColor = 'var(--over)';
+            } else if (current >= limit * 0.8) {
+                textEl.classList.add('limit-warning');
+                barEl.style.backgroundColor = '#d97706';
+            } else {
+                textEl.classList.add('limit-normal');
+            }
+        }
+
+        // --- GROCERY LIST LOGIC ---
+        function addGroceryItem() {
+            const input = document.getElementById('grocery-input');
+            if (!input.value) return;
+            data.groceries.push({ text: input.value, checked: false });
+            input.value = '';
+            saveData();
+            renderGroceries();
+        }
+
+        function renderGroceries() {
+            const ul = document.getElementById('grocery-ul');
+            ul.innerHTML = '';
+            data.groceries.forEach((item, index) => {
+                const li = document.createElement('li');
+                li.className = "flex items-center justify-between p-2 bg-white/50 rounded-lg text-sm border border-sage/10";
+                li.innerHTML = `
+                    <div class="flex items-center">
+                        <input type="checkbox" ${item.checked ? 'checked' : ''} onchange="toggleGrocery(${index})" class="mr-2 accent-forest">
+                        <span class="${item.checked ? 'line-through text-gray-400' : ''}">${item.text}</span>
+                    </div>
+                    <button onclick="removeGrocery(${index})" class="text-gray-300 hover:text-clay"><i class="fas fa-times"></i></button>
+                `;
+                ul.appendChild(li);
+            });
+        }
+
+        function toggleGrocery(index) {
+            data.groceries[index].checked = !data.groceries[index].checked;
+            saveData();
+            renderGroceries();
+        }
+
+        function removeGrocery(index) {
+            data.groceries.splice(index, 1);
+            saveData();
+            renderGroceries();
+        }
+
+        // --- STORAGE ---
+        function saveData() {
+            localStorage.setItem('cottageHubPesoData', JSON.stringify(data));
+        }
+
+        function loadData() {
+            const saved = localStorage.getItem('cottageHubPesoData');
+            if (saved) data = JSON.parse(saved);
+        }
+
+        function exportData() {
+            const code = btoa(JSON.stringify(data));
+            navigator.clipboard.writeText(code);
+            alert("Backup code copied! Use 'Restore' on your other device to sync.");
+        }
+
+        function importData() {
+            const code = prompt("Paste backup code:");
+            if (code) {
+                try {
+                    data = JSON.parse(atob(code));
+                    saveData();
+                    location.reload();
+                } catch(e) { alert("Invalid code."); }
+            }
+        }
+    </script>
+</body>
+</html>
