@@ -52,7 +52,7 @@
             background: white;
             padding: 10px;
             border-radius: 15px;
-            min-height: 450px;
+            min-height: 400px;
         }
 
         .btn-action {
@@ -62,8 +62,8 @@
         }
         .btn-action:hover { background-color: var(--forest); }
 
-        /* Small adjustments for calendar text */
-        .fc-event-title { font-size: 0.75rem !important; font-weight: bold; }
+        .fc-event { cursor: pointer; }
+        .fc-event-title { font-size: 0.75rem !important; font-weight: bold; padding: 2px; }
     </style>
 </head>
 <body class="p-4 md:p-6">
@@ -87,15 +87,21 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             
-            <!-- LEFT COLUMN: BUDGET & BILLS (4/12) -->
+            <!-- LEFT COLUMN: BUDGET & BILLS -->
             <div class="lg:col-span-4 space-y-6">
                 
                 <!-- Fixed Schedule Info -->
                 <div class="cottage-card p-5 bg-sage/10 border-sage/30">
-                    <h2 class="text-lg font-bold text-forest mb-3">📅 Fixed Schedule</h2>
+                    <h2 class="text-lg font-bold text-forest mb-3 italic">📅 Monthly Rhythm</h2>
                     <div class="text-sm space-y-2">
-                        <div class="flex justify-between"><span>Every 10th:</span> <span class="font-bold text-forest text-right">Salary 💰<br>Rent Due 🏠</span></div>
-                        <div class="flex justify-between pt-2"><span>Every 25th:</span> <span class="font-bold text-forest text-right">Salary 💰<br>Utilities 💧</span></div>
+                        <div class="flex justify-between items-start">
+                            <span>Every 10th:</span> 
+                            <span class="font-bold text-forest text-right">Salary 💰<br>Rent Due 🏠</span>
+                        </div>
+                        <div class="flex justify-between items-start pt-2">
+                            <span>Every 25th:</span> 
+                            <span class="font-bold text-forest text-right">Salary 💰<br>Utilities 💧</span>
+                        </div>
                     </div>
                 </div>
 
@@ -123,7 +129,7 @@
 
                 <!-- Weekly Status -->
                 <div class="cottage-card p-5 border-l-4 border-clay">
-                    <h2 class="text-lg font-bold text-forest mb-4 italic">This Week's Status</h2>
+                    <h2 class="text-lg font-bold text-forest mb-4 italic text-center">This Week's Status</h2>
                     <div class="space-y-4">
                         <div>
                             <div class="flex justify-between text-sm mb-1">
@@ -162,24 +168,39 @@
                 </div>
             </div>
 
-            <!-- MIDDLE COLUMN: MARKET LIST (3/12) -->
+            <!-- MIDDLE COLUMN: MARKET LIST -->
             <div class="lg:col-span-3">
                 <div class="cottage-card p-5 h-full flex flex-col">
                     <h2 class="text-lg font-bold text-forest mb-4 flex items-center italic">
                         <i class="fas fa-leaf mr-2 text-sage"></i> Market List
                     </h2>
-                    <div class="flex mb-4">
-                        <input type="text" id="grocery-input" class="flex-1 rounded-l-lg border-r-0 text-sm" placeholder="Add item...">
-                        <button onclick="addGroceryItem()" class="btn-action px-3 rounded-r-lg"><i class="fas fa-plus"></i></button>
+                    <div class="space-y-2 mb-4">
+                        <input type="text" id="grocery-input" class="w-full text-sm" placeholder="Item name...">
+                        <div class="flex gap-2">
+                            <input type="number" id="grocery-price" class="flex-1 text-sm" placeholder="₱ Price">
+                            <button onclick="addGroceryItem()" class="btn-action px-4 rounded-lg"><i class="fas fa-plus"></i></button>
+                        </div>
                     </div>
-                    <ul id="grocery-ul" class="space-y-2 overflow-y-auto max-h-[500px]"></ul>
+                    <ul id="grocery-ul" class="space-y-2 overflow-y-auto max-h-[400px] mb-4 flex-1"></ul>
+                    
+                    <div class="pt-4 border-t border-sage/20 mt-auto">
+                        <div class="flex justify-between items-center text-forest font-bold">
+                            <span class="text-sm italic">List Total:</span>
+                            <span id="list-total-cost">₱0.00</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- RIGHT COLUMN: CALENDAR (5/12) -->
+            <!-- RIGHT COLUMN: CALENDAR -->
             <div class="lg:col-span-5">
                 <div class="cottage-card p-5 h-full">
-                    <h2 class="text-lg font-bold text-forest mb-4 italic text-center">Gatherings & Dates</h2>
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-lg font-bold text-forest italic">Gatherings</h2>
+                        <button onclick="addCalendarEvent()" class="text-xs bg-sage/20 text-forest border border-sage px-3 py-1 rounded-full hover:bg-sage hover:text-white transition">
+                            <i class="fas fa-plus mr-1"></i> Add Event
+                        </button>
+                    </div>
                     <div id='calendar'></div>
                 </div>
             </div>
@@ -190,11 +211,12 @@
     <script>
         let data = {
             expenses: [],
-            groceries: [],
+            groceries: [], // Now stored as {text, price, checked}
             customEvents: []
         };
 
         const LIMITS = { grocery: 2000, dineout: 1000 };
+        let calendar;
 
         document.addEventListener('DOMContentLoaded', function() {
             loadData();
@@ -205,40 +227,44 @@
 
         function initCalendar() {
             const calendarEl = document.getElementById('calendar');
-            const calendar = new FullCalendar.Calendar(calendarEl, {
+            calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
                 headerToolbar: { left: 'prev,next', center: 'title', right: '' },
-                // DYNAMIC EVENT GENERATION
                 events: function(info, successCallback) {
                     let events = [];
-                    
-                    // Generate Fixed Events for every visible month
                     let current = new Date(info.start);
                     while (current <= info.end) {
                         let y = current.getFullYear();
                         let m = current.getMonth() + 1;
                         let monthStr = String(m).padStart(2, '0');
-
-                        // 10th Events
                         events.push({ title: '💰 Salary', start: `${y}-${monthStr}-10`, color: '#8A9A5B', allDay: true });
                         events.push({ title: '🏠 Rent Due', start: `${y}-${monthStr}-10`, color: '#B07D62', allDay: true });
-
-                        // 25th Events
                         events.push({ title: '💰 Salary', start: `${y}-${monthStr}-25`, color: '#8A9A5B', allDay: true });
                         events.push({ title: '💧 Utilities', start: `${y}-${monthStr}-25`, color: '#B07D62', allDay: true });
-
                         current.setMonth(current.getMonth() + 1);
                     }
-
-                    // Add custom events and return all
                     successCallback([...events, ...data.customEvents]);
                 },
                 height: 'auto',
                 eventClick: function(info) {
-                    alert(info.event.title + "\nDate: " + info.event.start.toLocaleDateString());
+                    if (confirm(`Remove event: "${info.event.title}"?`)) {
+                        data.customEvents = data.customEvents.filter(e => e.title !== info.event.title || e.start !== info.event.startStr);
+                        saveData();
+                        calendar.refetchEvents();
+                    }
                 }
             });
             calendar.render();
+        }
+
+        function addCalendarEvent() {
+            const title = prompt("Event Name:");
+            if (!title) return;
+            const date = prompt("Event Date (YYYY-MM-DD):", new Date().toISOString().split('T')[0]);
+            if (!date) return;
+            data.customEvents.push({ title: title, start: date, color: '#B07D62', allDay: true });
+            saveData();
+            calendar.refetchEvents();
         }
 
         // --- EXPENSE LOGIC ---
@@ -246,13 +272,7 @@
             const cat = document.getElementById('log-category').value;
             const amt = parseFloat(document.getElementById('log-amount').value);
             if (!amt) return;
-
-            data.expenses.push({
-                category: cat,
-                amount: amt,
-                date: new Date().toISOString()
-            });
-
+            data.expenses.push({ category: cat, amount: amt, date: new Date().toISOString() });
             document.getElementById('log-amount').value = '';
             saveData();
             updateDashboard();
@@ -260,27 +280,21 @@
 
         function updateDashboard() {
             const now = new Date();
-            // Get start of current week (Sunday)
             const startOfWeek = new Date(now);
             startOfWeek.setDate(now.getDate() - now.getDay());
             startOfWeek.setHours(0,0,0,0);
 
             const totals = { grocery: 0, dineout: 0, transport: 0, shop_online: 0, shop_store: 0 };
-
             data.expenses.forEach(exp => {
                 const expDate = new Date(exp.date);
-                if (expDate >= startOfWeek) {
-                    totals[exp.category] += exp.amount;
-                }
+                if (expDate >= startOfWeek) totals[exp.category] += exp.amount;
             });
 
             updateStatusUI('grocery', totals.grocery, LIMITS.grocery);
             updateStatusUI('dineout', totals.dineout, LIMITS.dineout);
-            
             document.getElementById('transport-total').innerText = `₱${totals.transport.toLocaleString()}`;
             document.getElementById('shop_online-total').innerText = `₱${totals.shop_online.toLocaleString()}`;
             document.getElementById('shop_store-total').innerText = `₱${totals.shop_store.toLocaleString()}`;
-            
             renderGroceries();
         }
 
@@ -288,48 +302,55 @@
             const textEl = document.getElementById(`${id}-total`);
             const barEl = document.getElementById(`${id}-bar`);
             const percent = Math.min((current / limit) * 100, 100);
-
             textEl.innerText = `₱${current.toLocaleString()}`;
             barEl.style.width = percent + '%';
-            textEl.className = 'font-bold';
-            barEl.style.backgroundColor = 'var(--sage)';
-
-            if (current >= limit) {
-                textEl.classList.add('limit-danger');
-                barEl.style.backgroundColor = 'var(--over)';
-            } else if (current >= limit * 0.8) {
-                textEl.classList.add('limit-warning');
-                barEl.style.backgroundColor = '#d97706';
-            } else {
-                textEl.classList.add('limit-normal');
-            }
+            barEl.style.backgroundColor = current >= limit ? 'var(--over)' : (current >= limit * 0.8 ? '#d97706' : 'var(--sage)');
         }
 
         // --- GROCERY LIST LOGIC ---
         function addGroceryItem() {
             const input = document.getElementById('grocery-input');
+            const priceInput = document.getElementById('grocery-price');
+            const price = parseFloat(priceInput.value) || 0;
+            
             if (!input.value) return;
-            data.groceries.push({ text: input.value, checked: false });
+            
+            data.groceries.push({ 
+                text: input.value, 
+                price: price,
+                checked: false 
+            });
+            
             input.value = '';
+            priceInput.value = '';
             saveData();
             renderGroceries();
         }
 
         function renderGroceries() {
             const ul = document.getElementById('grocery-ul');
+            const totalDisplay = document.getElementById('list-total-cost');
             ul.innerHTML = '';
+            let totalCost = 0;
+
             data.groceries.forEach((item, index) => {
+                totalCost += item.price;
                 const li = document.createElement('li');
                 li.className = "flex items-center justify-between p-2 bg-white/50 rounded-lg text-sm border border-sage/10";
                 li.innerHTML = `
-                    <div class="flex items-center">
-                        <input type="checkbox" ${item.checked ? 'checked' : ''} onchange="toggleGrocery(${index})" class="mr-2 accent-forest">
-                        <span class="${item.checked ? 'line-through text-gray-400' : ''}">${item.text}</span>
+                    <div class="flex items-center overflow-hidden">
+                        <input type="checkbox" ${item.checked ? 'checked' : ''} onchange="toggleGrocery(${index})" class="mr-2 accent-forest flex-shrink-0">
+                        <div class="truncate ${item.checked ? 'line-through text-gray-400' : ''}">
+                            <span class="font-bold">${item.text}</span>
+                            ${item.price > 0 ? `<span class="text-xs text-clay ml-1 italic">₱${item.price.toLocaleString()}</span>` : ''}
+                        </div>
                     </div>
-                    <button onclick="removeGrocery(${index})" class="text-gray-300 hover:text-clay"><i class="fas fa-times"></i></button>
+                    <button onclick="removeGrocery(${index})" class="text-gray-300 hover:text-clay ml-2"><i class="fas fa-times"></i></button>
                 `;
                 ul.appendChild(li);
             });
+
+            totalDisplay.innerText = `₱${totalCost.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
         }
 
         function toggleGrocery(index) {
@@ -345,21 +366,16 @@
         }
 
         // --- STORAGE ---
-        function saveData() {
-            localStorage.setItem('cottageHubPesoData', JSON.stringify(data));
-        }
-
+        function saveData() { localStorage.setItem('cottageHubPesoData', JSON.stringify(data)); }
         function loadData() {
             const saved = localStorage.getItem('cottageHubPesoData');
             if (saved) data = JSON.parse(saved);
         }
-
         function exportData() {
             const code = btoa(JSON.stringify(data));
             navigator.clipboard.writeText(code);
-            alert("Backup code copied! Send this to your other device and use 'Restore'.");
+            alert("Backup code copied!");
         }
-
         function importData() {
             const code = prompt("Paste backup code:");
             if (code) {
