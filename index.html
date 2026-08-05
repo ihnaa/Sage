@@ -37,7 +37,7 @@
         }
 
         .limit-normal { color: var(--forest); }
-        .limit-warning { color: #d97706; font-weight: bold; } /* Orange */
+        .limit-warning { color: #d97706; font-weight: bold; } 
         .limit-danger { color: var(--over); font-weight: bold; text-decoration: underline; }
 
         input, select {
@@ -45,13 +45,14 @@
             border: 1px solid #D1CCBD !important;
             border-radius: 8px !important;
             padding: 6px 10px;
+            color: var(--earth);
         }
 
         #calendar {
             background: white;
-            padding: 15px;
+            padding: 10px;
             border-radius: 15px;
-            height: 450px;
+            min-height: 450px;
         }
 
         .btn-action {
@@ -60,6 +61,9 @@
             transition: all 0.2s;
         }
         .btn-action:hover { background-color: var(--forest); }
+
+        /* Small adjustments for calendar text */
+        .fc-event-title { font-size: 0.75rem !important; font-weight: bold; }
     </style>
 </head>
 <body class="p-4 md:p-6">
@@ -90,8 +94,8 @@
                 <div class="cottage-card p-5 bg-sage/10 border-sage/30">
                     <h2 class="text-lg font-bold text-forest mb-3">📅 Fixed Schedule</h2>
                     <div class="text-sm space-y-2">
-                        <div class="flex justify-between"><span>10th:</span> <span>Salary 💰 & Rent 🏠</span></div>
-                        <div class="flex justify-between"><span>25th:</span> <span>Salary 💰 & Utilities 💧</span></div>
+                        <div class="flex justify-between"><span>Every 10th:</span> <span class="font-bold text-forest text-right">Salary 💰<br>Rent Due 🏠</span></div>
+                        <div class="flex justify-between pt-2"><span>Every 25th:</span> <span class="font-bold text-forest text-right">Salary 💰<br>Utilities 💧</span></div>
                     </div>
                 </div>
 
@@ -105,13 +109,15 @@
                                 <option value="grocery">🛒 Grocery</option>
                                 <option value="dineout">🍽️ Dine Out</option>
                                 <option value="transport">🚗 Transport</option>
+                                <option value="shop_online">🛍️ Shopping (Online)</option>
+                                <option value="shop_store">🏢 Shopping (Storefront)</option>
                             </select>
                         </div>
                         <div>
                             <label class="text-xs font-bold uppercase text-clay">Amount (₱)</label>
                             <input type="number" id="log-amount" class="w-full mt-1" placeholder="0.00">
                         </div>
-                        <button onclick="addExpense()" class="w-full btn-action py-2 rounded-lg font-bold">Add Entry</button>
+                        <button onclick="addExpense()" class="w-full btn-action py-2 rounded-lg font-bold shadow-sm">Add Entry</button>
                     </div>
                 </div>
 
@@ -137,9 +143,20 @@
                                 <div id="dineout-bar" class="bg-sage h-1.5 rounded-full" style="width: 0%"></div>
                             </div>
                         </div>
-                        <div class="pt-2 border-t flex justify-between">
-                            <span class="text-sm">Transport:</span>
-                            <span id="transport-total" class="font-bold">₱0</span>
+                        
+                        <div class="pt-3 border-t space-y-2">
+                            <div class="flex justify-between text-sm">
+                                <span class="text-clay italic">Shopping (Online):</span>
+                                <span id="shop_online-total" class="font-bold">₱0</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-clay italic">Shopping (Store):</span>
+                                <span id="shop_store-total" class="font-bold">₱0</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-clay italic">Transport:</span>
+                                <span id="transport-total" class="font-bold">₱0</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -155,14 +172,14 @@
                         <input type="text" id="grocery-input" class="flex-1 rounded-l-lg border-r-0 text-sm" placeholder="Add item...">
                         <button onclick="addGroceryItem()" class="btn-action px-3 rounded-r-lg"><i class="fas fa-plus"></i></button>
                     </div>
-                    <ul id="grocery-ul" class="space-y-2 overflow-y-auto max-h-[400px]"></ul>
+                    <ul id="grocery-ul" class="space-y-2 overflow-y-auto max-h-[500px]"></ul>
                 </div>
             </div>
 
             <!-- RIGHT COLUMN: CALENDAR (5/12) -->
             <div class="lg:col-span-5">
                 <div class="cottage-card p-5 h-full">
-                    <h2 class="text-lg font-bold text-forest mb-4 italic">Gatherings & Dates</h2>
+                    <h2 class="text-lg font-bold text-forest mb-4 italic text-center">Gatherings & Dates</h2>
                     <div id='calendar'></div>
                 </div>
             </div>
@@ -171,11 +188,10 @@
     </div>
 
     <script>
-        // Data Structure
         let data = {
-            expenses: [], // Array of {category, amount, date}
-            groceries: [], // Array of {text, checked}
-            customEvents: [] // Array of {title, start}
+            expenses: [],
+            groceries: [],
+            customEvents: []
         };
 
         const LIMITS = { grocery: 2000, dineout: 1000 };
@@ -189,22 +205,34 @@
 
         function initCalendar() {
             const calendarEl = document.getElementById('calendar');
-            const today = new Date();
-            const year = today.getFullYear();
-            const month = String(today.getMonth() + 1).padStart(2, '0');
-
-            // Generate recurring events
-            const fixedEvents = [
-                { title: '💰 Salary', start: `${year}-${month}-10`, color: '#8A9A5B' },
-                { title: '💰 Salary', start: `${year}-${month}-25`, color: '#8A9A5B' },
-                { title: '🏠 Rent Due', start: `${year}-${month}-10`, color: '#B07D62' },
-                { title: '💧 Utilities', start: `${year}-${month}-25`, color: '#B07D62' }
-            ];
-
             const calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
                 headerToolbar: { left: 'prev,next', center: 'title', right: '' },
-                events: [...fixedEvents, ...data.customEvents],
+                // DYNAMIC EVENT GENERATION
+                events: function(info, successCallback) {
+                    let events = [];
+                    
+                    // Generate Fixed Events for every visible month
+                    let current = new Date(info.start);
+                    while (current <= info.end) {
+                        let y = current.getFullYear();
+                        let m = current.getMonth() + 1;
+                        let monthStr = String(m).padStart(2, '0');
+
+                        // 10th Events
+                        events.push({ title: '💰 Salary', start: `${y}-${monthStr}-10`, color: '#8A9A5B', allDay: true });
+                        events.push({ title: '🏠 Rent Due', start: `${y}-${monthStr}-10`, color: '#B07D62', allDay: true });
+
+                        // 25th Events
+                        events.push({ title: '💰 Salary', start: `${y}-${monthStr}-25`, color: '#8A9A5B', allDay: true });
+                        events.push({ title: '💧 Utilities', start: `${y}-${monthStr}-25`, color: '#B07D62', allDay: true });
+
+                        current.setMonth(current.getMonth() + 1);
+                    }
+
+                    // Add custom events and return all
+                    successCallback([...events, ...data.customEvents]);
+                },
                 height: 'auto',
                 eventClick: function(info) {
                     alert(info.event.title + "\nDate: " + info.event.start.toLocaleDateString());
@@ -231,12 +259,13 @@
         }
 
         function updateDashboard() {
-            // Get current week dates
             const now = new Date();
-            const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay()));
+            // Get start of current week (Sunday)
+            const startOfWeek = new Date(now);
+            startOfWeek.setDate(now.getDate() - now.getDay());
             startOfWeek.setHours(0,0,0,0);
 
-            const totals = { grocery: 0, dineout: 0, transport: 0 };
+            const totals = { grocery: 0, dineout: 0, transport: 0, shop_online: 0, shop_store: 0 };
 
             data.expenses.forEach(exp => {
                 const expDate = new Date(exp.date);
@@ -245,10 +274,12 @@
                 }
             });
 
-            // Update UI & Colors
             updateStatusUI('grocery', totals.grocery, LIMITS.grocery);
             updateStatusUI('dineout', totals.dineout, LIMITS.dineout);
+            
             document.getElementById('transport-total').innerText = `₱${totals.transport.toLocaleString()}`;
+            document.getElementById('shop_online-total').innerText = `₱${totals.shop_online.toLocaleString()}`;
+            document.getElementById('shop_store-total').innerText = `₱${totals.shop_store.toLocaleString()}`;
             
             renderGroceries();
         }
@@ -260,8 +291,6 @@
 
             textEl.innerText = `₱${current.toLocaleString()}`;
             barEl.style.width = percent + '%';
-
-            // Color Logic
             textEl.className = 'font-bold';
             barEl.style.backgroundColor = 'var(--sage)';
 
@@ -328,7 +357,7 @@
         function exportData() {
             const code = btoa(JSON.stringify(data));
             navigator.clipboard.writeText(code);
-            alert("Backup code copied! Use 'Restore' on your other device to sync.");
+            alert("Backup code copied! Send this to your other device and use 'Restore'.");
         }
 
         function importData() {
