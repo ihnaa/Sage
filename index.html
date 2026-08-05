@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Cottage Hub - Peso Edition</title>
+    <title>The Botanical Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400&family=Quicksand:wght@300;500&display=swap" rel="stylesheet">
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
@@ -11,107 +11,138 @@
     
     <style>
         :root {
-            --sage: #8A9A5B;
-            --forest: #4F5D2F;
-            --cream: #FDFBF7;
-            --parchment: #F5F2E9;
-            --clay: #B07D62;
-            --earth: #5C4033;
-            --over: #C04848;
+            --moss-bg: #C8D1B7; 
+            --forest: #2D3A22;  
+            --sage-glass: rgba(244, 247, 237, 0.92); 
+            --leaf: #5F7444;    
+            --fern: #4A5D35;    
+            --clay-accent: #8B5E3C; 
+            --over: #A64444;    
         }
 
         body {
-            background-color: var(--parchment);
-            background-image: url("https://www.transparenttextures.com/patterns/paper-fibers.png");
+            background-color: var(--moss-bg);
+            /* Leafy Pattern Background */
+            background-image: url("data:image/svg+xml,%3Csvg width='52' height='26' viewBox='0 0 52 26' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239BA888' fill-opacity='0.15'%3E%3Cpath d='M10 10c0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6h2c0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4h-2c-2.21 0-4-1.79-4-4zm25.543 11.457c1.562 1.562 1.562 4.095 0 5.657-1.562 1.562-4.095 1.562-5.657 0-1.562-1.562-1.562-4.095 0-5.657 1.562-1.562 4.095-1.562 5.657 0zM15 0c3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4h-2c-2.21 0-4-1.79-4-4 0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6h2zm25.543 11.457c1.562 1.562 1.562 4.095 0 5.657-1.562 1.562-4.095 1.562-5.657 0-1.562-1.562-1.562-4.095 0-5.657 1.562-1.562 4.095-1.562 5.657 0z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
             font-family: 'Quicksand', sans-serif;
-            color: var(--earth);
+            color: var(--forest);
+            min-height: 100vh;
         }
 
         h1, h2, h3, .serif { font-family: 'Lora', serif; }
 
+        /* Floating Corner Plants */
+        .corner-plant {
+            position: fixed;
+            z-index: -1;
+            opacity: 0.4;
+            pointer-events: none;
+            font-size: 15rem;
+            color: var(--leaf);
+        }
+        .top-left { top: -2rem; left: -2rem; transform: rotate(-15deg); }
+        .bottom-right { bottom: -2rem; right: -2rem; transform: rotate(165deg); }
+
         .cottage-card {
-            background: var(--cream);
-            border: 1px solid #E2DCC8;
-            border-radius: 20px;
-            box-shadow: 0 4px 15px rgba(79, 93, 47, 0.05);
+            background: var(--sage-glass);
+            border: 1px solid rgba(255,255,255,0.4);
+            border-radius: 24px;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 10px 30px rgba(45, 58, 34, 0.1);
         }
 
-        .limit-normal { color: var(--forest); }
-        .limit-warning { color: #d97706; font-weight: bold; } 
-        .limit-danger { color: var(--over); font-weight: bold; text-decoration: underline; }
-
         input, select {
-            background: #fff;
-            border: 1px solid #D1CCBD !important;
-            border-radius: 8px !important;
-            padding: 6px 10px;
-            color: var(--earth);
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid #BCC4AD !important;
+            border-radius: 12px !important;
+            padding: 8px 12px;
+            color: var(--forest);
         }
 
         #calendar {
-            background: white;
-            padding: 10px;
-            border-radius: 15px;
-            min-height: 400px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 12px;
+            border-radius: 20px;
+            border: 1px solid #C5CDB6;
         }
 
         .btn-action {
-            background-color: var(--sage);
+            background-color: var(--leaf);
             color: white;
-            transition: all 0.2s;
+            border-radius: 12px;
+            transition: all 0.3s ease;
         }
-        .btn-action:hover { background-color: var(--forest); }
+        .btn-action:hover {
+            background-color: var(--fern);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(95, 116, 68, 0.3);
+        }
 
-        .fc-event { cursor: pointer; }
-        .fc-event-title { font-size: 0.75rem !important; font-weight: bold; padding: 2px; }
+        /* Full Calendar Customization */
+        .fc-event { border-radius: 6px !important; padding: 2px 4px !important; }
+        .fc-toolbar-title { color: var(--forest); font-family: 'Lora', serif; }
+        .fc-button-primary { background-color: var(--leaf) !important; border: none !important; border-radius: 8px !important; }
+
+        /* Weekly Progress Bars */
+        .progress-container { background: rgba(0,0,0,0.05); border-radius: 10px; height: 8px; overflow: hidden; }
+        .progress-bar { transition: width 0.5s ease; height: 100%; border-radius: 10px; }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-thumb { background: var(--leaf); border-radius: 10px; }
     </style>
 </head>
-<body class="p-4 md:p-6">
+<body class="p-4 md:p-8">
+
+    <!-- Decorative Elements -->
+    <i class="fas fa-leaf corner-plant top-left"></i>
+    <i class="fas fa-seedling corner-plant bottom-right"></i>
 
     <div class="max-w-7xl mx-auto">
         <!-- HEADER -->
-        <header class="flex flex-col md:flex-row justify-between items-center mb-8 border-b border-sage/20 pb-6">
+        <header class="flex flex-col md:flex-row justify-between items-center mb-10 pb-6 border-b border-forest/10">
             <div class="text-center md:text-left">
-                <h1 class="text-3xl font-bold text-forest mb-1 italic">🌿 My Life Dashboard</h1>
-                <p class="text-clay italic" id="current-date"></p>
+                <h1 class="text-4xl font-bold text-forest mb-1 italic">🌿 The Botanical Hub</h1>
+                <p class="text-fern font-medium italic" id="current-date"></p>
             </div>
-            <div class="flex gap-2 mt-4 md:mt-0">
-                <button onclick="exportData()" class="text-xs bg-white border border-sage px-4 py-2 rounded-full hover:bg-cream">
-                    <i class="fas fa-sync mr-1"></i> Copy Backup (Sync)
+            <div class="flex gap-3 mt-6 md:mt-0">
+                <button onclick="exportData()" class="bg-white/60 hover:bg-white border border-leaf text-leaf px-5 py-2 rounded-full text-sm font-bold transition shadow-sm">
+                    <i class="fas fa-sync-alt mr-2"></i>Sync Phone
                 </button>
-                <button onclick="importData()" class="text-xs bg-forest text-white px-4 py-2 rounded-full">
-                    <i class="fas fa-file-import mr-1"></i> Restore
+                <button onclick="importData()" class="bg-forest text-white px-5 py-2 rounded-full text-sm font-bold hover:opacity-90 transition shadow-md">
+                    <i class="fas fa-upload mr-2"></i>Restore
                 </button>
             </div>
         </header>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
             
-            <!-- LEFT COLUMN: BUDGET & BILLS -->
+            <!-- LEFT: TRACKER & BILLS -->
             <div class="lg:col-span-4 space-y-6">
                 
-                <!-- Fixed Schedule Info -->
-                <div class="cottage-card p-5 bg-sage/10 border-sage/30">
-                    <h2 class="text-lg font-bold text-forest mb-3 italic">📅 Monthly Rhythm</h2>
-                    <div class="text-sm space-y-2">
-                        <div class="flex justify-between items-start">
-                            <span>Every 10th:</span> 
-                            <span class="font-bold text-forest text-right">Salary 💰<br>Rent Due 🏠</span>
+                <!-- Fixed Schedule -->
+                <div class="cottage-card p-6 bg-leaf/5">
+                    <h2 class="text-xl font-bold text-forest mb-4 flex items-center italic">
+                        <i class="fas fa-calendar-check mr-2 text-leaf text-sm"></i> Monthly Rhythm
+                    </h2>
+                    <div class="text-sm space-y-3">
+                        <div class="flex justify-between items-center bg-white/40 p-2 rounded-lg">
+                            <span class="font-bold">10th</span>
+                            <span class="text-right italic">Salary 💰 & Rent 🏠</span>
                         </div>
-                        <div class="flex justify-between items-start pt-2">
-                            <span>Every 25th:</span> 
-                            <span class="font-bold text-forest text-right">Salary 💰<br>Utilities 💧</span>
+                        <div class="flex justify-between items-center bg-white/40 p-2 rounded-lg">
+                            <span class="font-bold">25th</span>
+                            <span class="text-right italic">Salary 💰 & Utilities 💧</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Expense Logger Form -->
-                <div class="cottage-card p-5">
-                    <h2 class="text-lg font-bold text-forest mb-4 italic">Log Daily Spending</h2>
-                    <div class="space-y-3">
-                        <div>
-                            <label class="text-xs font-bold uppercase text-clay">Category</label>
-                            <select id="log-category" class="w-full mt-1">
+                <!-- Expense Logger -->
+                <div class="cottage-card p-6 border-t-4 border-leaf">
+                    <h2 class="text-xl font-bold text-forest mb-4 italic">Daily Log</h2>
+                    <div class="space-y-4">
+                        <div class="group">
+                            <label class="text-xs font-bold uppercase text-fern mb-1 block">Category</label>
+                            <select id="log-category" class="w-full">
                                 <option value="grocery">🛒 Grocery</option>
                                 <option value="dineout">🍽️ Dine Out</option>
                                 <option value="transport">🚗 Transport</option>
@@ -120,47 +151,49 @@
                             </select>
                         </div>
                         <div>
-                            <label class="text-xs font-bold uppercase text-clay">Amount (₱)</label>
-                            <input type="number" id="log-amount" class="w-full mt-1" placeholder="0.00">
+                            <label class="text-xs font-bold uppercase text-fern mb-1 block">Amount (₱)</label>
+                            <input type="number" id="log-amount" class="w-full" placeholder="0.00">
                         </div>
-                        <button onclick="addExpense()" class="w-full btn-action py-2 rounded-lg font-bold shadow-sm">Add Entry</button>
+                        <button onclick="addExpense()" class="w-full btn-action py-3 font-bold text-lg shadow-sm">
+                            Add Entry
+                        </button>
                     </div>
                 </div>
 
                 <!-- Weekly Status -->
-                <div class="cottage-card p-5 border-l-4 border-clay">
-                    <h2 class="text-lg font-bold text-forest mb-4 italic text-center">This Week's Status</h2>
-                    <div class="space-y-4">
+                <div class="cottage-card p-6 border-l-8 border-fern">
+                    <h2 class="text-xl font-bold text-forest mb-6 italic text-center underline decoration-leaf/30 underline-offset-8">Weekly Status</h2>
+                    <div class="space-y-6">
                         <div>
-                            <div class="flex justify-between text-sm mb-1">
-                                <span>Groceries (Limit ₱2k)</span>
-                                <span id="grocery-total" class="font-bold">₱0</span>
+                            <div class="flex justify-between text-sm font-bold mb-2">
+                                <span>Groceries <span class="text-xs font-normal opacity-70">(₱2k Limit)</span></span>
+                                <span id="grocery-total">₱0</span>
                             </div>
-                            <div class="w-full bg-gray-200 rounded-full h-1.5">
-                                <div id="grocery-bar" class="bg-sage h-1.5 rounded-full" style="width: 0%"></div>
+                            <div class="progress-container">
+                                <div id="grocery-bar" class="progress-bar bg-leaf" style="width: 0%"></div>
                             </div>
                         </div>
                         <div>
-                            <div class="flex justify-between text-sm mb-1">
-                                <span>Dine Out (Limit ₱1k)</span>
-                                <span id="dineout-total" class="font-bold">₱0</span>
+                            <div class="flex justify-between text-sm font-bold mb-2">
+                                <span>Dine Out <span class="text-xs font-normal opacity-70">(₱1k Limit)</span></span>
+                                <span id="dineout-total">₱0</span>
                             </div>
-                            <div class="w-full bg-gray-200 rounded-full h-1.5">
-                                <div id="dineout-bar" class="bg-sage h-1.5 rounded-full" style="width: 0%"></div>
+                            <div class="progress-container">
+                                <div id="dineout-bar" class="progress-bar bg-leaf" style="width: 0%"></div>
                             </div>
                         </div>
                         
-                        <div class="pt-3 border-t space-y-2">
-                            <div class="flex justify-between text-sm">
-                                <span class="text-clay italic">Shopping (Online):</span>
+                        <div class="pt-4 border-t border-forest/10 space-y-3">
+                            <div class="flex justify-between text-sm italic">
+                                <span>Online Shopping:</span>
                                 <span id="shop_online-total" class="font-bold">₱0</span>
                             </div>
-                            <div class="flex justify-between text-sm">
-                                <span class="text-clay italic">Shopping (Store):</span>
+                            <div class="flex justify-between text-sm italic">
+                                <span>Store Shopping:</span>
                                 <span id="shop_store-total" class="font-bold">₱0</span>
                             </div>
-                            <div class="flex justify-between text-sm">
-                                <span class="text-clay italic">Transport:</span>
+                            <div class="flex justify-between text-sm italic">
+                                <span>Transport Total:</span>
                                 <span id="transport-total" class="font-bold">₱0</span>
                             </div>
                         </div>
@@ -168,37 +201,38 @@
                 </div>
             </div>
 
-            <!-- MIDDLE COLUMN: MARKET LIST -->
+            <!-- MIDDLE: MARKET LIST -->
             <div class="lg:col-span-3">
-                <div class="cottage-card p-5 h-full flex flex-col">
-                    <h2 class="text-lg font-bold text-forest mb-4 flex items-center italic">
-                        <i class="fas fa-leaf mr-2 text-sage"></i> Market List
+                <div class="cottage-card p-6 h-full flex flex-col relative overflow-hidden">
+                    <i class="fas fa-spa absolute -right-4 -top-4 text-leaf/5 text-8xl"></i>
+                    <h2 class="text-2xl font-bold text-forest mb-6 flex items-center italic">
+                        <i class="fas fa-seedling mr-2 text-leaf"></i> Market List
                     </h2>
-                    <div class="space-y-2 mb-4">
-                        <input type="text" id="grocery-input" class="w-full text-sm" placeholder="Item name...">
+                    <div class="space-y-3 mb-6 relative z-10">
+                        <input type="text" id="grocery-input" class="w-full" placeholder="What do we need?">
                         <div class="flex gap-2">
-                            <input type="number" id="grocery-price" class="flex-1 text-sm" placeholder="₱ Price">
-                            <button onclick="addGroceryItem()" class="btn-action px-4 rounded-lg"><i class="fas fa-plus"></i></button>
+                            <input type="number" id="grocery-price" class="flex-1" placeholder="₱ Price">
+                            <button onclick="addGroceryItem()" class="btn-action px-5"><i class="fas fa-plus"></i></button>
                         </div>
                     </div>
-                    <ul id="grocery-ul" class="space-y-2 overflow-y-auto max-h-[400px] mb-4 flex-1"></ul>
+                    <ul id="grocery-ul" class="space-y-3 overflow-y-auto max-h-[450px] mb-6 flex-1 pr-2"></ul>
                     
-                    <div class="pt-4 border-t border-sage/20 mt-auto">
-                        <div class="flex justify-between items-center text-forest font-bold">
-                            <span class="text-sm italic">List Total:</span>
-                            <span id="list-total-cost">₱0.00</span>
+                    <div class="pt-6 border-t border-leaf/20 mt-auto bg-leaf/5 -mx-6 px-6 pb-2 rounded-b-2xl">
+                        <div class="flex justify-between items-center text-forest">
+                            <span class="font-bold italic">Estimated Total:</span>
+                            <span id="list-total-cost" class="text-xl font-bold text-leaf">₱0.00</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- RIGHT COLUMN: CALENDAR -->
+            <!-- RIGHT: CALENDAR -->
             <div class="lg:col-span-5">
-                <div class="cottage-card p-5 h-full">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-lg font-bold text-forest italic">Gatherings</h2>
-                        <button onclick="addCalendarEvent()" class="text-xs bg-sage/20 text-forest border border-sage px-3 py-1 rounded-full hover:bg-sage hover:text-white transition">
-                            <i class="fas fa-plus mr-1"></i> Add Event
+                <div class="cottage-card p-6 h-full">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold text-forest italic">Gatherings</h2>
+                        <button onclick="addCalendarEvent()" class="text-sm bg-leaf/10 text-leaf border border-leaf px-4 py-1.5 rounded-full hover:bg-leaf hover:text-white transition font-bold">
+                            <i class="fas fa-plus-circle mr-1"></i> Add Event
                         </button>
                     </div>
                     <div id='calendar'></div>
@@ -211,7 +245,7 @@
     <script>
         let data = {
             expenses: [],
-            groceries: [], // Now stored as {text, price, checked}
+            groceries: [],
             customEvents: []
         };
 
@@ -237,17 +271,17 @@
                         let y = current.getFullYear();
                         let m = current.getMonth() + 1;
                         let monthStr = String(m).padStart(2, '0');
-                        events.push({ title: '💰 Salary', start: `${y}-${monthStr}-10`, color: '#8A9A5B', allDay: true });
-                        events.push({ title: '🏠 Rent Due', start: `${y}-${monthStr}-10`, color: '#B07D62', allDay: true });
-                        events.push({ title: '💰 Salary', start: `${y}-${monthStr}-25`, color: '#8A9A5B', allDay: true });
-                        events.push({ title: '💧 Utilities', start: `${y}-${monthStr}-25`, color: '#B07D62', allDay: true });
+                        events.push({ title: '💰 Salary', start: `${y}-${monthStr}-10`, color: '#5F7444', allDay: true });
+                        events.push({ title: '🏠 Rent Due', start: `${y}-${monthStr}-10`, color: '#8B5E3C', allDay: true });
+                        events.push({ title: '💰 Salary', start: `${y}-${monthStr}-25`, color: '#5F7444', allDay: true });
+                        events.push({ title: '💧 Utilities', start: `${y}-${monthStr}-25`, color: '#8B5E3C', allDay: true });
                         current.setMonth(current.getMonth() + 1);
                     }
                     successCallback([...events, ...data.customEvents]);
                 },
                 height: 'auto',
                 eventClick: function(info) {
-                    if (confirm(`Remove event: "${info.event.title}"?`)) {
+                    if (confirm(`Delete "${info.event.title}"?`)) {
                         data.customEvents = data.customEvents.filter(e => e.title !== info.event.title || e.start !== info.event.startStr);
                         saveData();
                         calendar.refetchEvents();
@@ -258,16 +292,15 @@
         }
 
         function addCalendarEvent() {
-            const title = prompt("Event Name:");
+            const title = prompt("Event Title:");
             if (!title) return;
-            const date = prompt("Event Date (YYYY-MM-DD):", new Date().toISOString().split('T')[0]);
+            const date = prompt("Date (YYYY-MM-DD):", new Date().toISOString().split('T')[0]);
             if (!date) return;
-            data.customEvents.push({ title: title, start: date, color: '#B07D62', allDay: true });
+            data.customEvents.push({ title: title, start: date, color: '#4A5D35', allDay: true });
             saveData();
             calendar.refetchEvents();
         }
 
-        // --- EXPENSE LOGIC ---
         function addExpense() {
             const cat = document.getElementById('log-category').value;
             const amt = parseFloat(document.getElementById('log-amount').value);
@@ -304,27 +337,17 @@
             const percent = Math.min((current / limit) * 100, 100);
             textEl.innerText = `₱${current.toLocaleString()}`;
             barEl.style.width = percent + '%';
-            barEl.style.backgroundColor = current >= limit ? 'var(--over)' : (current >= limit * 0.8 ? '#d97706' : 'var(--sage)');
+            barEl.style.backgroundColor = current >= limit ? 'var(--over)' : (current >= limit * 0.8 ? '#d97706' : 'var(--leaf)');
         }
 
-        // --- GROCERY LIST LOGIC ---
         function addGroceryItem() {
             const input = document.getElementById('grocery-input');
             const priceInput = document.getElementById('grocery-price');
             const price = parseFloat(priceInput.value) || 0;
-            
             if (!input.value) return;
-            
-            data.groceries.push({ 
-                text: input.value, 
-                price: price,
-                checked: false 
-            });
-            
-            input.value = '';
-            priceInput.value = '';
-            saveData();
-            renderGroceries();
+            data.groceries.push({ text: input.value, price: price, checked: false });
+            input.value = ''; priceInput.value = '';
+            saveData(); renderGroceries();
         }
 
         function renderGroceries() {
@@ -332,40 +355,35 @@
             const totalDisplay = document.getElementById('list-total-cost');
             ul.innerHTML = '';
             let totalCost = 0;
-
             data.groceries.forEach((item, index) => {
                 totalCost += item.price;
                 const li = document.createElement('li');
-                li.className = "flex items-center justify-between p-2 bg-white/50 rounded-lg text-sm border border-sage/10";
+                li.className = "flex items-center justify-between p-3 bg-white/60 rounded-xl text-sm border border-leaf/10 shadow-sm";
                 li.innerHTML = `
                     <div class="flex items-center overflow-hidden">
-                        <input type="checkbox" ${item.checked ? 'checked' : ''} onchange="toggleGrocery(${index})" class="mr-2 accent-forest flex-shrink-0">
+                        <input type="checkbox" ${item.checked ? 'checked' : ''} onchange="toggleGrocery(${index})" class="mr-3 accent-leaf w-4 h-4">
                         <div class="truncate ${item.checked ? 'line-through text-gray-400' : ''}">
-                            <span class="font-bold">${item.text}</span>
-                            ${item.price > 0 ? `<span class="text-xs text-clay ml-1 italic">₱${item.price.toLocaleString()}</span>` : ''}
+                            <span class="font-bold text-forest">${item.text}</span>
+                            ${item.price > 0 ? `<br><span class="text-xs text-fern font-bold">₱${item.price.toLocaleString()}</span>` : ''}
                         </div>
                     </div>
-                    <button onclick="removeGrocery(${index})" class="text-gray-300 hover:text-clay ml-2"><i class="fas fa-times"></i></button>
+                    <button onclick="removeGrocery(${index})" class="text-gray-300 hover:text-over transition ml-3"><i class="fas fa-trash"></i></button>
                 `;
                 ul.appendChild(li);
             });
-
             totalDisplay.innerText = `₱${totalCost.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
         }
 
         function toggleGrocery(index) {
             data.groceries[index].checked = !data.groceries[index].checked;
-            saveData();
-            renderGroceries();
+            saveData(); renderGroceries();
         }
 
         function removeGrocery(index) {
             data.groceries.splice(index, 1);
-            saveData();
-            renderGroceries();
+            saveData(); renderGroceries();
         }
 
-        // --- STORAGE ---
         function saveData() { localStorage.setItem('cottageHubPesoData', JSON.stringify(data)); }
         function loadData() {
             const saved = localStorage.getItem('cottageHubPesoData');
@@ -374,7 +392,7 @@
         function exportData() {
             const code = btoa(JSON.stringify(data));
             navigator.clipboard.writeText(code);
-            alert("Backup code copied!");
+            alert("Backup code copied! Send this to your other device to sync.");
         }
         function importData() {
             const code = prompt("Paste backup code:");
