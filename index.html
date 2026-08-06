@@ -84,7 +84,8 @@
                 <p id="current-date" class="text-fern font-medium italic"></p>
             </div>
             <div class="flex flex-wrap gap-2 mt-6 md:mt-0 justify-center">
-                <button onclick="showWeeklyReceipt()" class="bg-white border border-leaf text-leaf px-4 py-2 rounded-full text-xs font-bold shadow-sm hover:bg-leaf hover:text-white transition">
+                <!-- Sunday Report: ID added for dynamic visibility -->
+                <button id="sunday-report-btn" onclick="showWeeklyReceipt()" class="hidden bg-white border border-leaf text-leaf px-4 py-2 rounded-full text-xs font-bold shadow-sm hover:bg-leaf hover:text-white transition">
                     <i class="fas fa-file-invoice-dollar mr-1"></i> Sunday Report
                 </button>
                 <button onclick="exportData()" class="bg-leaf text-white px-4 py-2 rounded-full text-xs font-bold shadow-md hover:opacity-90">
@@ -149,7 +150,7 @@
                         </div>
                     </div>
                     <ul id="market-ul" class="space-y-2 max-h-40 overflow-y-auto pr-1"></ul>
-                    <div class="mt-4 pt-2 border-t border-leaf/20 text-right font-bold text-leaf">Total: <span id="market-total">₱0</span></div>
+                    <div class="mt-4 pt-2 border-t border-leaf/20 text-right font-bold text-leaf text-lg">Total: <span id="market-total">₱0</span></div>
                 </div>
 
                 <div class="cottage-card p-6">
@@ -213,8 +214,16 @@
             loadData();
             updateUI();
             initCalendar();
+            checkSunday();
             document.getElementById('current-date').innerText = new Date().toLocaleDateString('en-PH', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
         });
+
+        // Sunday Logic
+        function checkSunday() {
+            if (new Date().getDay() === 0) {
+                document.getElementById('sunday-report-btn').classList.remove('hidden');
+            }
+        }
 
         function initCalendar() {
             const calendarEl = document.getElementById('calendar');
@@ -226,4 +235,152 @@
                     let curr = new Date(info.start);
                     while (curr <= info.end) {
                         let y = curr.getFullYear(), m = String(curr.getMonth()+1).padStart(2, '0');
-                        eve
+                        events.push({ title: '💰 Salary', start: `${y}-${m}-10`, color: '#5F7444', allDay: true });
+                        events.push({ title: '🏠 Rent', start: `${y}-${m}-10`, color: '#8B5E3C', allDay: true });
+                        events.push({ title: '💰 Salary', start: `${y}-${m}-25`, color: '#5F7444', allDay: true });
+                        events.push({ title: '💧 Bills', start: `${y}-${m}-25`, color: '#8B5E3C', allDay: true });
+                        curr.setMonth(curr.getMonth() + 1);
+                    }
+                    successCallback([...events, ...data.customEvents]);
+                },
+                dateClick: (info) => showDayDetails(info.dateStr),
+                height: 'auto'
+            });
+            calendar.render();
+        }
+
+        function addExpense() {
+            const cat = document.getElementById('log-category').value;
+            const amt = parseFloat(document.getElementById('log-amount').value);
+            if (!amt) return;
+            data.expenses.push({ category: cat, amount: amt, date: new Date().toISOString() });
+            document.getElementById('log-amount').value = '';
+            saveData(); updateUI();
+        }
+
+        function showDayDetails(dateStr) {
+            const modal = document.getElementById('dayModal');
+            const content = document.getElementById('modalContent');
+            document.getElementById('modalDate').innerText = dateStr;
+            const logs = data.expenses.filter(e => e.date.startsWith(dateStr));
+            content.innerHTML = logs.length ? logs.map(e => `<div class="flex justify-between border-b border-forest/5 pb-2"><span>${CATEGORY_MAP[e.category]}</span><span class="font-bold">₱${e.amount.toLocaleString()}</span></div>`).join('') : '<p class="text-center italic opacity-40 py-4">No spending today.</p>';
+            modal.style.display = 'flex';
+        }
+
+        function updateUI() {
+            const now = new Date();
+            const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay()));
+            startOfWeek.setHours(0,0,0,0);
+            const totals = { grocery: 0, dineout: 0, transport: 0, subscription: 0, shop_online: 0, shop_store: 0 };
+            data.expenses.forEach(e => { if (new Date(e.date) >= startOfWeek) totals[e.category] += e.amount; });
+            
+            updateBar('grocery', totals.grocery, 2000);
+            updateBar('dineout', totals.dineout, 1000);
+            document.getElementById('sub-total').innerText = "₱" + totals.subscription.toLocaleString();
+            document.getElementById('online-total').innerText = "₱" + totals.shop_online.toLocaleString();
+            document.getElementById('store-total').innerText = "₱" + totals.shop_store.toLocaleString();
+            document.getElementById('trans-total').innerText = "₱" + totals.transport.toLocaleString();
+            
+            renderMarket();
+            renderMealPlanner();
+        }
+
+        function updateBar(id, current, limit) {
+            document.getElementById(`${id}-total`).innerText = "₱" + current.toLocaleString();
+            const bar = document.getElementById(`${id}-bar`);
+            const pct = Math.min((current/limit)*100, 100);
+            bar.style.width = pct + "%";
+            bar.style.background = current >= limit ? 'var(--over)' : (current >= limit*0.8 ? '#d97706' : 'var(--leaf)');
+        }
+
+        function addMarketItem() {
+            const name = document.getElementById('market-item').value, price = parseFloat(document.getElementById('market-price').value) || 0;
+            if (!name) return;
+            data.groceries.push({ text: name, price, checked: false });
+            document.getElementById('market-item').value = ''; document.getElementById('market-price').value = '';
+            saveData(); renderMarket();
+        }
+
+        function renderMarket() {
+            const ul = document.getElementById('market-ul'); ul.innerHTML = ''; let total = 0;
+            data.groceries.forEach((item, i) => {
+                total += item.price;
+                ul.innerHTML += `<li class="flex justify-between items-center bg-white/50 p-2 rounded-xl text-xs shadow-sm mb-1"><div class="flex items-center gap-3"><input type="checkbox" ${item.checked ? 'checked' : ''} onchange="toggleList('groceries', ${i})" class="accent-leaf h-4 w-4"><span class="${item.checked ? 'line-through opacity-40' : 'font-medium'}">${item.text} - ₱${item.price}</span></div><button onclick="removeItem('groceries', ${i})" class="text-over opacity-50 px-1"><i class="fas fa-trash-alt"></i></button></li>`;
+            });
+            document.getElementById('market-total').innerText = "₱" + total.toLocaleString();
+        }
+
+        function addRecipe() {
+            const name = document.getElementById('recipe-input').value;
+            if (!name) return;
+            data.meals.push({ id: Date.now(), name, checked: false, ingredients: [] });
+            document.getElementById('recipe-input').value = '';
+            saveData(); renderMealPlanner();
+        }
+
+        function addIngredient(mealId) {
+            const input = document.getElementById(`ing-input-${mealId}`);
+            if (!input.value) return;
+            data.meals.find(m => m.id === mealId).ingredients.push({ text: input.value, checked: false });
+            input.value = ''; saveData(); renderMealPlanner();
+        }
+
+        function renderMealPlanner() {
+            const container = document.getElementById('meal-planner-container');
+            container.innerHTML = data.meals.map((m, i) => `<div class="bg-white/40 border border-leaf/10 p-3 rounded-2xl shadow-sm mb-3"><div class="flex items-center justify-between mb-2"><div class="flex items-center gap-2"><input type="checkbox" ${m.checked ? 'checked' : ''} onchange="toggleMeal(${i})" class="accent-leaf h-4 w-4"><span class="font-bold text-sm ${m.checked ? 'line-through opacity-50' : ''}">${m.name}</span></div><button onclick="removeMeal(${i})" class="text-[10px] text-over opacity-50">Delete</button></div><div class="ml-6 space-y-1">${m.ingredients.map((ing, ingI) => `<div class="flex items-center gap-2 text-xs"><input type="checkbox" ${ing.checked ? 'checked' : ''} onchange="toggleIngredient(${i}, ${ingI})" class="accent-leaf h-3 w-3"><span class="${ing.checked ? 'line-through opacity-50' : ''}">${ing.text}</span></div>`).join('')}<div class="flex gap-2 mt-2"><input type="text" id="ing-input-${m.id}" class="w-full !p-1 text-[10px]" placeholder="+ ingredient"><button onclick="addIngredient(${m.id})" class="btn-leaf px-2 py-0 text-[10px]">+</button></div></div></div>`).join('');
+        }
+
+        function toggleMeal(i) { data.meals[i].checked = !data.meals[i].checked; saveData(); renderMealPlanner(); }
+        function removeMeal(i) { data.meals.splice(i, 1); saveData(); renderMealPlanner(); }
+        function toggleIngredient(mealI, ingI) { data.meals[mealI].ingredients[ingI].checked = !data.meals[mealI].ingredients[ingI].checked; saveData(); renderMealPlanner(); }
+        function toggleList(key, i) { data[key][i].checked = !data[key][i].checked; saveData(); updateUI(); }
+        function removeItem(key, i) { data[key].splice(i, 1); saveData(); updateUI(); }
+
+        function showWeeklyReceipt() {
+            const now = new Date(); const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay())); startOfWeek.setHours(0,0,0,0);
+            const weeklyLogs = data.expenses.filter(e => new Date(e.date) >= startOfWeek);
+            const itemsCont = document.getElementById('receipt-items'); itemsCont.innerHTML = ''; let total = 0;
+            const summary = {}; weeklyLogs.forEach(e => { summary[e.category] = (summary[e.category] || 0) + e.amount; total += e.amount; });
+            for (let cat in summary) { itemsCont.innerHTML += `<div class="flex justify-between"><span>${CATEGORY_MAP[cat]}</span><span>₱${summary[cat].toLocaleString()}</span></div>`; }
+            document.getElementById('receipt-date').innerText = "DATE: " + new Date().toLocaleDateString();
+            document.getElementById('receipt-total').innerText = "₱" + total.toLocaleString();
+            document.getElementById('receiptModal').style.display = 'flex';
+        }
+
+        function sendReceiptEmail() {
+            const total = document.getElementById('receipt-total').innerText, date = document.getElementById('receipt-date').innerText;
+            let body = `Weekly Spending Report (${date})\n\n`;
+            const now = new Date(); const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay()));
+            data.expenses.filter(e => new Date(e.date) >= startOfWeek).forEach(e => { body += `${CATEGORY_MAP[e.category]}: ₱${e.amount}\n`; });
+            body += `\nTOTAL: ${total}`;
+            window.location.href = `mailto:?subject=Weekly Expense Receipt&body=${encodeURIComponent(body)}`;
+        }
+
+        function addCalendarEvent() { const title = prompt("Event Name:"), date = prompt("Date (YYYY-MM-DD):"); if (title && date) { data.customEvents.push({ title, start: date, color: '#4A5D35', allDay: true }); saveData(); location.reload(); } }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        
+        function saveData() { localStorage.setItem('botanicalData_v4', JSON.stringify(data)); }
+        function loadData() { 
+            const saved = localStorage.getItem('botanicalData_v4'); 
+            if (saved) { data = JSON.parse(saved); } 
+            if(!data.meals) data.meals = []; 
+        }
+        
+        function exportData() { 
+            const code = btoa(JSON.stringify(data)); 
+            navigator.clipboard.writeText(code); 
+            alert("✅ Sync Code Copied!"); 
+        }
+        function importData() { 
+            const code = prompt("Paste Sync Code:"); 
+            if (code) { 
+                try { 
+                    data = JSON.parse(atob(code)); 
+                    saveData(); 
+                    location.reload(); 
+                } catch(e) { alert("❌ Invalid Code."); } 
+            } 
+        }
+    </script>
+</body>
+</html>
