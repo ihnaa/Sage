@@ -13,25 +13,20 @@
         :root {
             --moss-bg: #C8D1B7; 
             --forest: #2D3A22;  
-            --sage-glass: rgba(244, 247, 237, 0.92); 
+            --sage-glass: rgba(244, 247, 237, 0.94); 
             --leaf: #5F7444;    
             --fern: #4A5D35;    
-            --clay-accent: #8B5E3C; 
+            --clay: #8B5E3C; 
             --over: #A64444;    
         }
 
         body {
             background-color: var(--moss-bg);
-            /* Leafy Pattern Background */
-            background-image: url("data:image/svg+xml,%3Csvg width='52' height='26' viewBox='0 0 52 26' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239BA888' fill-opacity='0.15'%3E%3Cpath d='M10 10c0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6h2c0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4h-2c-2.21 0-4-1.79-4-4zm25.543 11.457c1.562 1.562 1.562 4.095 0 5.657-1.562 1.562-4.095 1.562-5.657 0-1.562-1.562-1.562-4.095 0-5.657 1.562-1.562 4.095-1.562 5.657 0zM15 0c3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4h-2c-2.21 0-4-1.79-4-4 0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6h2zm25.543 11.457c1.562 1.562 1.562 4.095 0 5.657-1.562 1.562-4.095 1.562-5.657 0-1.562-1.562-1.562-4.095 0-5.657 1.562-1.562 4.095-1.562 5.657 0z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg width='52' height='26' viewBox='0 0 52 26' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239BA888' fill-opacity='0.15'%3E%3Cpath d='M10 10c0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6h2c0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4h-2c-2.21 0-4-1.79-4-4zm25.543 11.457c1.562 1.562 1.562 4.095 0 5.657-1.562 1.562-4.095 1.562-5.657 0-1.562-1.562-4.095 0-5.657 1.562-1.562 4.095-1.562 5.657 0zM15 0c3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4h-2c-2.21 0-4-1.79-4-4 0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6h2zm25.543 11.457c1.562 1.562 1.562 4.095 0 5.657-1.562 1.562-4.095 1.562-5.657 0-1.562-1.562-1.562-4.095 0-5.657 1.562-1.562 4.095-1.562 5.657 0z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
             font-family: 'Quicksand', sans-serif;
             color: var(--forest);
-            min-height: 100vh;
         }
-
-        h1, h2, h3, .serif { font-family: 'Lora', serif; }
-
-        /* Floating Corner Plants */
+ /* Floating Corner Plants */
         .corner-plant {
             position: fixed;
             z-index: -1;
@@ -42,203 +37,174 @@
         }
         .top-left { top: -2rem; left: -2rem; transform: rotate(-15deg); }
         .bottom-right { bottom: -2rem; right: -2rem; transform: rotate(165deg); }
+        }
+        h1, h2, h3, .serif { font-family: 'Lora', serif; }
 
         .cottage-card {
             background: var(--sage-glass);
-            border: 1px solid rgba(255,255,255,0.4);
             border-radius: 24px;
-            backdrop-filter: blur(8px);
-            box-shadow: 0 10px 30px rgba(45, 58, 34, 0.1);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(45, 58, 34, 0.1);
+            border: 1px solid rgba(255,255,255,0.3);
         }
 
         input, select {
-            background: rgba(255, 255, 255, 0.8);
+            background: white;
             border: 1px solid #BCC4AD !important;
-            border-radius: 12px !important;
+            border-radius: 10px !important;
             padding: 8px 12px;
-            color: var(--forest);
         }
 
-        #calendar {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 12px;
-            border-radius: 20px;
-            border: 1px solid #C5CDB6;
+        .btn-leaf { background: var(--leaf); color: white; border-radius: 10px; font-weight: bold; }
+        .btn-leaf:hover { background: var(--fern); }
+
+        #calendar { background: white; border-radius: 15px; padding: 10px; }
+        
+
+        /* Receipt Style */
+        .receipt-font { font-family: 'Courier New', Courier, monospace; }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0; top: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
         }
 
-        .btn-action {
-            background-color: var(--leaf);
-            color: white;
-            border-radius: 12px;
-            transition: all 0.3s ease;
-        }
-        .btn-action:hover {
-            background-color: var(--fern);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(95, 116, 68, 0.3);
-        }
-
-        /* Full Calendar Customization */
-        .fc-event { border-radius: 6px !important; padding: 2px 4px !important; }
-        .fc-toolbar-title { color: var(--forest); font-family: 'Lora', serif; }
-        .fc-button-primary { background-color: var(--leaf) !important; border: none !important; border-radius: 8px !important; }
-
-        /* Weekly Progress Bars */
-        .progress-container { background: rgba(0,0,0,0.05); border-radius: 10px; height: 8px; overflow: hidden; }
-        .progress-bar { transition: width 0.5s ease; height: 100%; border-radius: 10px; }
-
-        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-thumb { background: var(--leaf); border-radius: 10px; }
     </style>
 </head>
-<body class="p-4 md:p-8">
-
-    <!-- Decorative Elements -->
-    <i class="fas fa-leaf corner-plant top-left"></i>
-    <i class="fas fa-seedling corner-plant bottom-right"></i>
+<body class="p-4 md:p-6 min-h-screen">
 
     <div class="max-w-7xl mx-auto">
         <!-- HEADER -->
-        <header class="flex flex-col md:flex-row justify-between items-center mb-10 pb-6 border-b border-forest/10">
-            <div class="text-center md:text-left">
-                <h1 class="text-4xl font-bold text-forest mb-1 italic">🌿 The Botanical Hub</h1>
-                <p class="text-fern font-medium italic" id="current-date"></p>
+        <header class="flex flex-col md:flex-row justify-between items-center mb-8 pb-4 border-b border-forest/10">
+            <div>
+                <h1 class="text-3xl font-bold text-forest italic">🌿 The Botanical Hub</h1>
+                <p id="current-date" class="text-fern italic"></p>
             </div>
-            <div class="flex gap-3 mt-6 md:mt-0">
-                <button onclick="exportData()" class="bg-white/60 hover:bg-white border border-leaf text-leaf px-5 py-2 rounded-full text-sm font-bold transition shadow-sm">
-                    <i class="fas fa-sync-alt mr-2"></i>Sync Phone
+            <div class="flex gap-2 mt-4 md:mt-0">
+                <button onclick="showWeeklyReceipt()" class="bg-white border border-leaf text-leaf px-4 py-2 rounded-full text-sm font-bold shadow-sm hover:bg-leaf hover:text-white transition">
+                    <i class="fas fa-file-invoice-dollar mr-1"></i> Sunday Report
                 </button>
-                <button onclick="importData()" class="bg-forest text-white px-5 py-2 rounded-full text-sm font-bold hover:opacity-90 transition shadow-md">
-                    <i class="fas fa-upload mr-2"></i>Restore
+                <button onclick="exportData()" class="bg-forest text-white px-4 py-2 rounded-full text-sm font-bold shadow-md">
+                    <i class="fas fa-sync mr-1"></i> Sync
                 </button>
             </div>
         </header>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             
-            <!-- LEFT: TRACKER & BILLS -->
+            <!-- COLUMN 1: LOGGING & STATUS -->
             <div class="lg:col-span-4 space-y-6">
-                
-                <!-- Fixed Schedule -->
-                <div class="cottage-card p-6 bg-leaf/5">
-                    <h2 class="text-xl font-bold text-forest mb-4 flex items-center italic">
-                        <i class="fas fa-calendar-check mr-2 text-leaf text-sm"></i> Monthly Rhythm
-                    </h2>
-                    <div class="text-sm space-y-3">
-                        <div class="flex justify-between items-center bg-white/40 p-2 rounded-lg">
-                            <span class="font-bold">10th</span>
-                            <span class="text-right italic">Salary 💰 & Rent 🏠</span>
-                        </div>
-                        <div class="flex justify-between items-center bg-white/40 p-2 rounded-lg">
-                            <span class="font-bold">25th</span>
-                            <span class="text-right italic">Salary 💰 & Utilities 💧</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Expense Logger -->
-                <div class="cottage-card p-6 border-t-4 border-leaf">
-                    <h2 class="text-xl font-bold text-forest mb-4 italic">Daily Log</h2>
-                    <div class="space-y-4">
-                        <div class="group">
-                            <label class="text-xs font-bold uppercase text-fern mb-1 block">Category</label>
-                            <select id="log-category" class="w-full">
-                                <option value="grocery">🛒 Grocery</option>
-                                <option value="dineout">🍽️ Dine Out</option>
-                                <option value="transport">🚗 Transport</option>
-                                <option value="shop_online">🛍️ Shopping (Online)</option>
-                                <option value="shop_store">🏢 Shopping (Storefront)</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="text-xs font-bold uppercase text-fern mb-1 block">Amount (₱)</label>
-                            <input type="number" id="log-amount" class="w-full" placeholder="0.00">
-                        </div>
-                        <button onclick="addExpense()" class="w-full btn-action py-3 font-bold text-lg shadow-sm">
-                            Add Entry
-                        </button>
+                <!-- Log Daily -->
+                <div class="cottage-card p-5">
+                    <h2 class="text-lg font-bold mb-4 italic"><i class="fas fa-pen-nib mr-2"></i>Daily Log</h2>
+                    <div class="space-y-3">
+                        <select id="log-category" class="w-full">
+                            <option value="grocery">🛒 Grocery</option>
+                            <option value="dineout">🍽️ Dine Out</option>
+                            <option value="transport">🚗 Transport</option>
+                            <option value="subscription">💳 Subscriptions</option>
+                            <option value="shop_online">🛍️ Shopping (Online)</option>
+                            <option value="shop_store">🏢 Shopping (Storefront)</option>
+                        </select>
+                        <input type="number" id="log-amount" class="w-full" placeholder="₱ Amount">
+                        <button onclick="addExpense()" class="w-full btn-leaf py-2 shadow-sm">Save Entry</button>
                     </div>
                 </div>
 
                 <!-- Weekly Status -->
-                <div class="cottage-card p-6 border-l-8 border-fern">
-                    <h2 class="text-xl font-bold text-forest mb-6 italic text-center underline decoration-leaf/30 underline-offset-8">Weekly Status</h2>
-                    <div class="space-y-6">
+                <div class="cottage-card p-5 border-l-8 border-leaf">
+                    <h2 class="text-lg font-bold mb-4 italic text-center">Weekly Spending</h2>
+                    <div class="space-y-4 text-sm">
                         <div>
-                            <div class="flex justify-between text-sm font-bold mb-2">
-                                <span>Groceries <span class="text-xs font-normal opacity-70">(₱2k Limit)</span></span>
-                                <span id="grocery-total">₱0</span>
-                            </div>
-                            <div class="progress-container">
-                                <div id="grocery-bar" class="progress-bar bg-leaf" style="width: 0%"></div>
-                            </div>
+                            <div class="flex justify-between mb-1"><span>Groceries (₱2k)</span><span id="grocery-total" class="font-bold">₱0</span></div>
+                            <div class="w-full bg-gray-200 h-2 rounded-full"><div id="grocery-bar" class="h-2 rounded-full bg-leaf"></div></div>
                         </div>
                         <div>
-                            <div class="flex justify-between text-sm font-bold mb-2">
-                                <span>Dine Out <span class="text-xs font-normal opacity-70">(₱1k Limit)</span></span>
-                                <span id="dineout-total">₱0</span>
-                            </div>
-                            <div class="progress-container">
-                                <div id="dineout-bar" class="progress-bar bg-leaf" style="width: 0%"></div>
-                            </div>
+                            <div class="flex justify-between mb-1"><span>Dine Out (₱1k)</span><span id="dineout-total" class="font-bold">₱0</span></div>
+                            <div class="w-full bg-gray-200 h-2 rounded-full"><div id="dineout-bar" class="h-2 rounded-full bg-leaf"></div></div>
                         </div>
-                        
-                        <div class="pt-4 border-t border-forest/10 space-y-3">
-                            <div class="flex justify-between text-sm italic">
-                                <span>Online Shopping:</span>
-                                <span id="shop_online-total" class="font-bold">₱0</span>
-                            </div>
-                            <div class="flex justify-between text-sm italic">
-                                <span>Store Shopping:</span>
-                                <span id="shop_store-total" class="font-bold">₱0</span>
-                            </div>
-                            <div class="flex justify-between text-sm italic">
-                                <span>Transport Total:</span>
-                                <span id="transport-total" class="font-bold">₱0</span>
-                            </div>
+                        <div class="pt-2 border-t space-y-1 opacity-80 italic">
+                            <div class="flex justify-between"><span>Subscriptions:</span><span id="sub-total">₱0</span></div>
+                            <div class="flex justify-between"><span>Online Shopping:</span><span id="online-total">₱0</span></div>
+                            <div class="flex justify-between"><span>Transportation:</span><span id="trans-total">₱0</span></div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- MIDDLE: MARKET LIST -->
-            <div class="lg:col-span-3">
-                <div class="cottage-card p-6 h-full flex flex-col relative overflow-hidden">
-                    <i class="fas fa-spa absolute -right-4 -top-4 text-leaf/5 text-8xl"></i>
-                    <h2 class="text-2xl font-bold text-forest mb-6 flex items-center italic">
-                        <i class="fas fa-seedling mr-2 text-leaf"></i> Market List
-                    </h2>
-                    <div class="space-y-3 mb-6 relative z-10">
-                        <input type="text" id="grocery-input" class="w-full" placeholder="What do we need?">
+            <!-- COLUMN 2: LISTS & MEALS -->
+            <div class="lg:col-span-3 space-y-6">
+                <!-- Market List -->
+                <div class="cottage-card p-5">
+                    <h2 class="text-lg font-bold mb-4 italic"><i class="fas fa-shopping-basket mr-2"></i>Market List</h2>
+                    <div class="space-y-2 mb-4">
+                        <input type="text" id="market-item" class="w-full text-xs" placeholder="Item name">
                         <div class="flex gap-2">
-                            <input type="number" id="grocery-price" class="flex-1" placeholder="₱ Price">
-                            <button onclick="addGroceryItem()" class="btn-action px-5"><i class="fas fa-plus"></i></button>
+                            <input type="number" id="market-price" class="w-full text-xs" placeholder="₱ Price">
+                            <button onclick="addMarketItem()" class="btn-leaf px-3"><i class="fas fa-plus"></i></button>
                         </div>
                     </div>
-                    <ul id="grocery-ul" class="space-y-3 overflow-y-auto max-h-[450px] mb-6 flex-1 pr-2"></ul>
-                    
-                    <div class="pt-6 border-t border-leaf/20 mt-auto bg-leaf/5 -mx-6 px-6 pb-2 rounded-b-2xl">
-                        <div class="flex justify-between items-center text-forest">
-                            <span class="font-bold italic">Estimated Total:</span>
-                            <span id="list-total-cost" class="text-xl font-bold text-leaf">₱0.00</span>
-                        </div>
+                    <ul id="market-ul" class="space-y-2 max-h-40 overflow-y-auto pr-1"></ul>
+                    <div class="mt-4 pt-2 border-t text-right font-bold text-leaf">Total: <span id="market-total">₱0</span></div>
+                </div>
+
+                <!-- Meal Section -->
+                <div class="cottage-card p-5">
+                    <h2 class="text-lg font-bold mb-4 italic"><i class="fas fa-utensils mr-2"></i>Meal Planner</h2>
+                    <div class="flex gap-2 mb-4">
+                        <input type="text" id="recipe-input" class="w-full text-xs" placeholder="Add recipe/meal...">
+                        <button onclick="addRecipe()" class="btn-leaf px-3"><i class="fas fa-plus"></i></button>
                     </div>
+                    <ul id="recipe-ul" class="space-y-2 max-h-40 overflow-y-auto"></ul>
                 </div>
             </div>
 
-            <!-- RIGHT: CALENDAR -->
+            <!-- COLUMN 3: CALENDAR -->
             <div class="lg:col-span-5">
-                <div class="cottage-card p-6 h-full">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-2xl font-bold text-forest italic">Gatherings</h2>
-                        <button onclick="addCalendarEvent()" class="text-sm bg-leaf/10 text-leaf border border-leaf px-4 py-1.5 rounded-full hover:bg-leaf hover:text-white transition font-bold">
-                            <i class="fas fa-plus-circle mr-1"></i> Add Event
-                        </button>
+                <div class="cottage-card p-5 h-full">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-lg font-bold italic">Gatherings</h2>
+                        <button onclick="addCalendarEvent()" class="text-xs text-leaf font-bold hover:underline">+ New Event</button>
                     </div>
-                    <div id='calendar'></div>
+                    <div id="calendar"></div>
+                    <p class="text-[10px] text-center mt-2 italic opacity-60">Tip: Click a date to see spending breakdown</p>
                 </div>
             </div>
+        </div>
+    </div>
 
+    <!-- MODAL: DAILY BREAKDOWN -->
+    <div id="dayModal" class="modal flex items-center justify-center p-4">
+        <div class="cottage-card p-6 w-full max-w-sm">
+            <h3 id="modalDate" class="text-xl font-bold mb-4 text-leaf italic"></h3>
+            <div id="modalContent" class="space-y-2 text-sm max-h-60 overflow-y-auto mb-6"></div>
+            <button onclick="closeModal('dayModal')" class="w-full btn-leaf py-2">Close</button>
+        </div>
+    </div>
+
+    <!-- MODAL: WEEKLY RECEIPT -->
+    <div id="receiptModal" class="modal flex items-center justify-center p-4">
+        <div class="bg-white p-8 w-full max-w-xs shadow-2xl relative border-t-8 border-leaf">
+            <div class="receipt-font text-xs text-black">
+                <p class="text-center font-bold text-lg mb-2 uppercase">Botanical Hub</p>
+                <p class="text-center mb-4">WEEKLY REPORT RECEIPT</p>
+                <p id="receipt-date" class="mb-4"></p>
+                <div class="border-b-2 border-dashed border-black mb-2"></div>
+                <div id="receipt-items" class="space-y-1 mb-4"></div>
+                <div class="border-b-2 border-dashed border-black mb-2"></div>
+                <div class="flex justify-between font-bold text-sm"><span>TOTAL SPENT:</span><span id="receipt-total">₱0</span></div>
+                <p class="mt-8 text-center italic">--- Stay Planty ---</p>
+            </div>
+            <div class="mt-6 flex flex-col gap-2">
+                <button onclick="sendReceiptEmail()" class="w-full bg-forest text-white py-2 rounded font-bold text-xs uppercase tracking-widest">Email Receipt</button>
+                <button onclick="closeModal('receiptModal')" class="w-full text-gray-400 text-xs py-1">Dismiss</button>
+            </div>
         </div>
     </div>
 
@@ -246,164 +212,206 @@
         let data = {
             expenses: [],
             groceries: [],
+            recipes: [],
             customEvents: []
         };
 
-        const LIMITS = { grocery: 2000, dineout: 1000 };
-        let calendar;
+        const CATEGORY_MAP = {
+            grocery: "🛒 Grocery",
+            dineout: "🍽️ Dine Out",
+            transport: "🚗 Transport",
+            subscription: "💳 Sub",
+            shop_online: "🛍️ Online",
+            shop_store: "🏢 Store"
+        };
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', () => {
             loadData();
-            updateDashboard();
+            updateUI();
             initCalendar();
             document.getElementById('current-date').innerText = new Date().toLocaleDateString('en-PH', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
         });
 
+        // --- CALENDAR ---
         function initCalendar() {
             const calendarEl = document.getElementById('calendar');
-            calendar = new FullCalendar.Calendar(calendarEl, {
+            const calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
                 headerToolbar: { left: 'prev,next', center: 'title', right: '' },
                 events: function(info, successCallback) {
                     let events = [];
-                    let current = new Date(info.start);
-                    while (current <= info.end) {
-                        let y = current.getFullYear();
-                        let m = current.getMonth() + 1;
-                        let monthStr = String(m).padStart(2, '0');
-                        events.push({ title: '💰 Salary', start: `${y}-${monthStr}-10`, color: '#5F7444', allDay: true });
-                        events.push({ title: '🏠 Rent Due', start: `${y}-${monthStr}-10`, color: '#8B5E3C', allDay: true });
-                        events.push({ title: '💰 Salary', start: `${y}-${monthStr}-25`, color: '#5F7444', allDay: true });
-                        events.push({ title: '💧 Utilities', start: `${y}-${monthStr}-25`, color: '#8B5E3C', allDay: true });
-                        current.setMonth(current.getMonth() + 1);
+                    let curr = new Date(info.start);
+                    while (curr <= info.end) {
+                        let y = curr.getFullYear(), m = String(curr.getMonth()+1).padStart(2, '0');
+                        events.push({ title: '💰 Salary', start: `${y}-${m}-10`, color: '#5F7444', allDay: true });
+                        events.push({ title: '🏠 Rent', start: `${y}-${m}-10`, color: '#8B5E3C', allDay: true });
+                        events.push({ title: '💰 Salary', start: `${y}-${m}-25`, color: '#5F7444', allDay: true });
+                        events.push({ title: '💧 Bills', start: `${y}-${m}-25`, color: '#8B5E3C', allDay: true });
+                        curr.setMonth(curr.getMonth() + 1);
                     }
                     successCallback([...events, ...data.customEvents]);
                 },
-                height: 'auto',
-                eventClick: function(info) {
-                    if (confirm(`Delete "${info.event.title}"?`)) {
-                        data.customEvents = data.customEvents.filter(e => e.title !== info.event.title || e.start !== info.event.startStr);
-                        saveData();
-                        calendar.refetchEvents();
-                    }
-                }
+                dateClick: (info) => showDayDetails(info.dateStr),
+                height: 'auto'
             });
             calendar.render();
         }
 
-        function addCalendarEvent() {
-            const title = prompt("Event Title:");
-            if (!title) return;
-            const date = prompt("Date (YYYY-MM-DD):", new Date().toISOString().split('T')[0]);
-            if (!date) return;
-            data.customEvents.push({ title: title, start: date, color: '#4A5D35', allDay: true });
-            saveData();
-            calendar.refetchEvents();
-        }
-
+        // --- CORE LOGIC ---
         function addExpense() {
             const cat = document.getElementById('log-category').value;
             const amt = parseFloat(document.getElementById('log-amount').value);
             if (!amt) return;
             data.expenses.push({ category: cat, amount: amt, date: new Date().toISOString() });
             document.getElementById('log-amount').value = '';
-            saveData();
-            updateDashboard();
+            saveData(); updateUI();
         }
 
-        function updateDashboard() {
+        function showDayDetails(dateStr) {
+            const modal = document.getElementById('dayModal');
+            const content = document.getElementById('modalContent');
+            document.getElementById('modalDate').innerText = "Logs for " + dateStr;
+            
+            const logs = data.expenses.filter(e => e.date.startsWith(dateStr));
+            content.innerHTML = logs.length ? logs.map(e => `
+                <div class="flex justify-between border-b border-forest/10 pb-1">
+                    <span>${CATEGORY_MAP[e.category]}</span>
+                    <span class="font-bold">₱${e.amount.toLocaleString()}</span>
+                </div>
+            `).join('') : '<p class="text-center italic opacity-50">No spending logged for this day.</p>';
+            
+            modal.style.display = 'flex';
+        }
+
+        function updateUI() {
             const now = new Date();
-            const startOfWeek = new Date(now);
-            startOfWeek.setDate(now.getDate() - now.getDay());
+            const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay()));
             startOfWeek.setHours(0,0,0,0);
 
-            const totals = { grocery: 0, dineout: 0, transport: 0, shop_online: 0, shop_store: 0 };
-            data.expenses.forEach(exp => {
-                const expDate = new Date(exp.date);
-                if (expDate >= startOfWeek) totals[exp.category] += exp.amount;
+            const totals = { grocery: 0, dineout: 0, transport: 0, subscription: 0, shop_online: 0, shop_store: 0 };
+            data.expenses.forEach(e => {
+                if (new Date(e.date) >= startOfWeek) totals[e.category] += e.amount;
             });
 
-            updateStatusUI('grocery', totals.grocery, LIMITS.grocery);
-            updateStatusUI('dineout', totals.dineout, LIMITS.dineout);
-            document.getElementById('transport-total').innerText = `₱${totals.transport.toLocaleString()}`;
-            document.getElementById('shop_online-total').innerText = `₱${totals.shop_online.toLocaleString()}`;
-            document.getElementById('shop_store-total').innerText = `₱${totals.shop_store.toLocaleString()}`;
-            renderGroceries();
+            // Status Bars
+            updateBar('grocery', totals.grocery, 2000);
+            updateBar('dineout', totals.dineout, 1000);
+            document.getElementById('trans-total').innerText = "₱" + totals.transport.toLocaleString();
+            document.getElementById('sub-total').innerText = "₱" + totals.subscription.toLocaleString();
+            document.getElementById('online-total').innerText = "₱" + totals.shop_online.toLocaleString();
+
+            renderMarket();
+            renderRecipes();
         }
 
-        function updateStatusUI(id, current, limit) {
-            const textEl = document.getElementById(`${id}-total`);
-            const barEl = document.getElementById(`${id}-bar`);
-            const percent = Math.min((current / limit) * 100, 100);
-            textEl.innerText = `₱${current.toLocaleString()}`;
-            barEl.style.width = percent + '%';
-            barEl.style.backgroundColor = current >= limit ? 'var(--over)' : (current >= limit * 0.8 ? '#d97706' : 'var(--leaf)');
+        function updateBar(id, current, limit) {
+            document.getElementById(`${id}-total`).innerText = "₱" + current.toLocaleString();
+            const bar = document.getElementById(`${id}-bar`);
+            const pct = Math.min((current/limit)*100, 100);
+            bar.style.width = pct + "%";
+            bar.style.background = current >= limit ? 'var(--over)' : (current >= limit*0.8 ? '#d97706' : 'var(--leaf)');
         }
 
-        function addGroceryItem() {
-            const input = document.getElementById('grocery-input');
-            const priceInput = document.getElementById('grocery-price');
-            const price = parseFloat(priceInput.value) || 0;
-            if (!input.value) return;
-            data.groceries.push({ text: input.value, price: price, checked: false });
-            input.value = ''; priceInput.value = '';
-            saveData(); renderGroceries();
+        // --- LISTS ---
+        function addMarketItem() {
+            const name = document.getElementById('market-item').value;
+            const price = parseFloat(document.getElementById('market-price').value) || 0;
+            if (!name) return;
+            data.groceries.push({ text: name, price, checked: false });
+            document.getElementById('market-item').value = '';
+            document.getElementById('market-price').value = '';
+            saveData(); renderMarket();
         }
 
-        function renderGroceries() {
-            const ul = document.getElementById('grocery-ul');
-            const totalDisplay = document.getElementById('list-total-cost');
-            ul.innerHTML = '';
-            let totalCost = 0;
-            data.groceries.forEach((item, index) => {
-                totalCost += item.price;
-                const li = document.createElement('li');
-                li.className = "flex items-center justify-between p-3 bg-white/60 rounded-xl text-sm border border-leaf/10 shadow-sm";
-                li.innerHTML = `
-                    <div class="flex items-center overflow-hidden">
-                        <input type="checkbox" ${item.checked ? 'checked' : ''} onchange="toggleGrocery(${index})" class="mr-3 accent-leaf w-4 h-4">
-                        <div class="truncate ${item.checked ? 'line-through text-gray-400' : ''}">
-                            <span class="font-bold text-forest">${item.text}</span>
-                            ${item.price > 0 ? `<br><span class="text-xs text-fern font-bold">₱${item.price.toLocaleString()}</span>` : ''}
+        function renderMarket() {
+            const ul = document.getElementById('market-ul');
+            ul.innerHTML = ''; let total = 0;
+            data.groceries.forEach((item, i) => {
+                total += item.price;
+                ul.innerHTML += `
+                    <li class="flex justify-between items-center bg-white/40 p-2 rounded-lg text-xs">
+                        <div class="flex items-center gap-2">
+                            <input type="checkbox" ${item.checked ? 'checked' : ''} onchange="toggleList('groceries', ${i})" class="accent-leaf">
+                            <span class="${item.checked ? 'line-through opacity-50' : ''}">${item.text} - ₱${item.price}</span>
                         </div>
-                    </div>
-                    <button onclick="removeGrocery(${index})" class="text-gray-300 hover:text-over transition ml-3"><i class="fas fa-trash"></i></button>
-                `;
-                ul.appendChild(li);
+                        <button onclick="removeItem('groceries', ${i})" class="text-over"><i class="fas fa-times"></i></button>
+                    </li>`;
             });
-            totalDisplay.innerText = `₱${totalCost.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
+            document.getElementById('market-total').innerText = "₱" + total.toLocaleString();
         }
 
-        function toggleGrocery(index) {
-            data.groceries[index].checked = !data.groceries[index].checked;
-            saveData(); renderGroceries();
+        function addRecipe() {
+            const text = document.getElementById('recipe-input').value;
+            if (!text) return;
+            data.recipes.push({ text, checked: false });
+            document.getElementById('recipe-input').value = '';
+            saveData(); renderRecipes();
         }
 
-        function removeGrocery(index) {
-            data.groceries.splice(index, 1);
-            saveData(); renderGroceries();
+        function renderRecipes() {
+            const ul = document.getElementById('recipe-ul');
+            ul.innerHTML = data.recipes.map((r, i) => `
+                <li class="flex items-center gap-2 bg-white/40 p-2 rounded-lg text-xs">
+                    <input type="checkbox" ${r.checked ? 'checked' : ''} onchange="toggleList('recipes', ${i})" class="accent-leaf">
+                    <span class="${r.checked ? 'line-through opacity-50' : ''}">${r.text}</span>
+                    <button onclick="removeItem('recipes', ${i})" class="ml-auto text-over"><i class="fas fa-times"></i></button>
+                </li>`).join('');
         }
 
-        function saveData() { localStorage.setItem('cottageHubPesoData', JSON.stringify(data)); }
-        function loadData() {
-            const saved = localStorage.getItem('cottageHubPesoData');
-            if (saved) data = JSON.parse(saved);
-        }
-        function exportData() {
-            const code = btoa(JSON.stringify(data));
-            navigator.clipboard.writeText(code);
-            alert("Backup code copied! Send this to your other device to sync.");
-        }
-        function importData() {
-            const code = prompt("Paste backup code:");
-            if (code) {
-                try {
-                    data = JSON.parse(atob(code));
-                    saveData();
-                    location.reload();
-                } catch(e) { alert("Invalid code."); }
+        function toggleList(key, i) { data[key][i].checked = !data[key][i].checked; saveData(); updateUI(); }
+        function removeItem(key, i) { data[key].splice(i, 1); saveData(); updateUI(); }
+
+        // --- RECEIPT & EMAIL ---
+        function showWeeklyReceipt() {
+            const now = new Date();
+            const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay()));
+            startOfWeek.setHours(0,0,0,0);
+            
+            const weeklyLogs = data.expenses.filter(e => new Date(e.date) >= startOfWeek);
+            const itemsCont = document.getElementById('receipt-items');
+            itemsCont.innerHTML = '';
+            let total = 0;
+
+            const summary = {};
+            weeklyLogs.forEach(e => {
+                summary[e.category] = (summary[e.category] || 0) + e.amount;
+                total += e.amount;
+            });
+
+            for (let cat in summary) {
+                itemsCont.innerHTML += `<div class="flex justify-between"><span>${CATEGORY_MAP[cat]}</span><span>₱${summary[cat].toLocaleString()}</span></div>`;
             }
+
+            document.getElementById('receipt-date').innerText = "DATE: " + new Date().toLocaleDateString();
+            document.getElementById('receipt-total').innerText = "₱" + total.toLocaleString();
+            document.getElementById('receiptModal').style.display = 'flex';
         }
+
+        function sendReceiptEmail() {
+            const total = document.getElementById('receipt-total').innerText;
+            const date = document.getElementById('receipt-date').innerText;
+            let body = `Weekly Spending Report (${date})\n\n`;
+            
+            const now = new Date();
+            const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay()));
+            data.expenses.filter(e => new Date(e.date) >= startOfWeek).forEach(e => {
+                body += `${CATEGORY_MAP[e.category]}: ₱${e.amount}\n`;
+            });
+            body += `\nTOTAL: ${total}\n\nGenerated by Botanical Hub`;
+            
+            window.location.href = `mailto:?subject=Weekly Expense Receipt&body=${encodeURIComponent(body)}`;
+        }
+
+        // --- UTILS ---
+        function addCalendarEvent() {
+            const title = prompt("Event Name:"), date = prompt("Date (YYYY-MM-DD):");
+            if (title && date) { data.customEvents.push({ title, start: date, color: '#4A5D35', allDay: true }); saveData(); location.reload(); }
+        }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        function saveData() { localStorage.setItem('botanicalData', JSON.stringify(data)); }
+        function loadData() { const saved = localStorage.getItem('botanicalData'); if (saved) data = JSON.parse(saved); }
+        function exportData() { navigator.clipboard.writeText(btoa(JSON.stringify(data))); alert("Backup code copied!"); }
+        function importData() { const code = prompt("Paste code:"); if (code) { data = JSON.parse(atob(code)); saveData(); location.reload(); } }
     </script>
 </body>
 </html>
