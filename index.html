@@ -13,7 +13,7 @@
         :root {
             --moss-bg: #C8D1B7; 
             --forest: #2D3A22;  
-            --sage-glass: rgba(244, 247, 237, 0.94); 
+            --sage-glass: rgba(244, 247, 237, 0.96); 
             --leaf: #5F7444;    
             --fern: #4A5D35;    
             --over: #A64444;    
@@ -27,7 +27,7 @@
             min-height: 100vh;
         }
 
-        h1, h2, h3, .serif { font-family: 'Lora', serif; }
+        h1, h2, h3 { font-family: 'Lora', serif; }
 
         .corner-plant {
             position: fixed;
@@ -43,31 +43,32 @@
         .cottage-card {
             background: var(--sage-glass);
             border-radius: 24px;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px);
             box-shadow: 0 8px 32px rgba(45, 58, 34, 0.1);
-            border: 1px solid rgba(255,255,255,0.3);
+            border: 1px solid rgba(255,255,255,0.4);
         }
 
-        input, select {
+        input, select, textarea {
             background: white;
             border: 1px solid #BCC4AD !important;
             border-radius: 10px !important;
             padding: 8px 12px;
         }
 
-        .btn-leaf { background: var(--leaf); color: white; border-radius: 10px; font-weight: bold; transition: all 0.2s; }
+        .btn-leaf { background: var(--leaf); color: white; border-radius: 12px; font-weight: bold; transition: all 0.2s; }
         .btn-leaf:hover { background: var(--fern); transform: translateY(-1px); }
 
         #calendar { background: white; border-radius: 15px; padding: 10px; border: 1px solid #C5CDB6; }
         .receipt-font { font-family: 'Courier New', Courier, monospace; }
         
+        /* Modal Base - No Flex hardcoded */
         .modal {
             display: none;
             position: fixed;
             z-index: 100;
             left: 0; top: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5);
-            backdrop-filter: blur(4px);
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(5px);
         }
     </style>
 </head>
@@ -84,14 +85,14 @@
                 <p id="current-date" class="text-fern font-medium italic"></p>
             </div>
             <div class="flex flex-wrap gap-2 mt-6 md:mt-0 justify-center">
-                <!-- Sunday Report: ID added for dynamic visibility -->
-                <button id="sunday-report-btn" onclick="showWeeklyReceipt()" class="hidden bg-white border border-leaf text-leaf px-4 py-2 rounded-full text-xs font-bold shadow-sm hover:bg-leaf hover:text-white transition">
+                <!-- Sunday Report Logic: Start hidden -->
+                <button id="sunday-report-btn" style="display: none;" onclick="showWeeklyReceipt()" class="bg-white border border-leaf text-leaf px-4 py-2 rounded-full text-xs font-bold shadow-sm hover:bg-leaf hover:text-white transition">
                     <i class="fas fa-file-invoice-dollar mr-1"></i> Sunday Report
                 </button>
-                <button onclick="exportData()" class="bg-leaf text-white px-4 py-2 rounded-full text-xs font-bold shadow-md hover:opacity-90">
+                <button onclick="exportData()" class="bg-leaf text-white px-5 py-2 rounded-full text-xs font-bold shadow-md hover:opacity-90">
                     <i class="fas fa-sync mr-1"></i> Sync
                 </button>
-                <button onclick="importData()" class="bg-forest text-white px-4 py-2 rounded-full text-xs font-bold shadow-md hover:opacity-90">
+                <button onclick="importData()" class="bg-forest text-white px-5 py-2 rounded-full text-xs font-bold shadow-md hover:opacity-90">
                     <i class="fas fa-paste mr-1"></i> Restore
                 </button>
             </div>
@@ -99,7 +100,7 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
             
-            <!-- COLUMN 1: LOGGING & STATUS -->
+            <!-- COLUMN 1 -->
             <div class="lg:col-span-4 space-y-8">
                 <div class="cottage-card p-6">
                     <h2 class="text-xl font-bold mb-4 italic text-forest"><i class="fas fa-pen-nib mr-2"></i>Daily Log</h2>
@@ -118,7 +119,7 @@
                 </div>
 
                 <div class="cottage-card p-6 border-l-8 border-leaf">
-                    <h2 class="text-xl font-bold mb-6 italic text-center text-forest underline decoration-leaf/20 underline-offset-8">Weekly Spending</h2>
+                    <h2 class="text-xl font-bold mb-6 italic text-center text-forest underline decoration-leaf/20 underline-offset-8">Weekly Status</h2>
                     <div class="space-y-6 text-sm">
                         <div>
                             <div class="flex justify-between mb-2"><span>Groceries (₱2k)</span><span id="grocery-total" class="font-bold">₱0</span></div>
@@ -138,32 +139,32 @@
                 </div>
             </div>
 
-            <!-- COLUMN 2: MARKET & MEAL PLANNER -->
+            <!-- COLUMN 2 -->
             <div class="lg:col-span-4 space-y-8">
                 <div class="cottage-card p-6">
                     <h2 class="text-xl font-bold mb-4 italic text-forest"><i class="fas fa-shopping-basket mr-2"></i>Market List</h2>
                     <div class="space-y-2 mb-4">
-                        <input type="text" id="market-item" class="w-full text-sm" placeholder="What to buy?">
+                        <input type="text" id="market-item" class="w-full text-sm font-bold" placeholder="Item name">
                         <div class="flex gap-2">
-                            <input type="number" id="market-price" class="w-full text-sm" placeholder="₱ Price">
+                            <input type="number" id="market-price" class="w-full text-sm font-bold" placeholder="₱ Price">
                             <button onclick="addMarketItem()" class="btn-leaf px-4"><i class="fas fa-plus"></i></button>
                         </div>
                     </div>
-                    <ul id="market-ul" class="space-y-2 max-h-40 overflow-y-auto pr-1"></ul>
-                    <div class="mt-4 pt-2 border-t border-leaf/20 text-right font-bold text-leaf text-lg">Total: <span id="market-total">₱0</span></div>
+                    <ul id="market-ul" class="space-y-2 max-h-48 overflow-y-auto pr-1"></ul>
+                    <div class="mt-4 pt-2 border-t border-leaf/20 text-right font-bold text-leaf">Total: <span id="market-total">₱0</span></div>
                 </div>
 
                 <div class="cottage-card p-6">
                     <h2 class="text-xl font-bold mb-4 italic text-forest text-center border-b-2 border-dashed border-leaf/20 pb-2">Meal Planner</h2>
                     <div class="flex gap-2 mb-6">
-                        <input type="text" id="recipe-input" class="w-full text-sm" placeholder="Meal (e.g. Hamburger)">
+                        <input type="text" id="recipe-input" class="w-full text-sm font-bold" placeholder="Meal Name">
                         <button onclick="addRecipe()" class="btn-leaf px-4"><i class="fas fa-plus"></i></button>
                     </div>
                     <div id="meal-planner-container" class="space-y-4 max-h-80 overflow-y-auto pr-2"></div>
                 </div>
             </div>
 
-            <!-- COLUMN 3: CALENDAR -->
+            <!-- COLUMN 3 -->
             <div class="lg:col-span-4">
                 <div class="cottage-card p-6 h-full">
                     <div class="flex justify-between items-center mb-6">
@@ -171,37 +172,50 @@
                         <button onclick="addCalendarEvent()" class="text-xs text-leaf font-bold hover:underline">+ New Event</button>
                     </div>
                     <div id="calendar"></div>
-                    <p class="text-[10px] text-center mt-4 italic opacity-60">Tip: Click a date to see daily breakdown</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- MODAL: DAILY BREAKDOWN -->
-    <div id="dayModal" class="modal flex items-center justify-center p-4">
-        <div class="cottage-card p-8 w-full max-w-sm">
-            <h3 id="modalDate" class="text-2xl font-bold mb-4 text-leaf italic text-center"></h3>
-            <div id="modalContent" class="space-y-3 text-sm max-h-64 overflow-y-auto mb-8 border-y border-leaf/10 py-4"></div>
-            <button onclick="closeModal('dayModal')" class="w-full btn-leaf py-3">Close</button>
+    <!-- MODALS (Strictly Display None via CSS) -->
+    <div id="dayModal" class="modal">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="cottage-card p-8 w-full max-w-sm">
+                <h3 id="modalDate" class="text-2xl font-bold mb-4 text-leaf italic text-center"></h3>
+                <div id="modalContent" class="space-y-3 text-sm max-h-64 overflow-y-auto mb-8 border-y border-leaf/10 py-4"></div>
+                <button onclick="closeModal('dayModal')" class="w-full btn-leaf py-3">Close</button>
+            </div>
         </div>
     </div>
 
-    <!-- MODAL: WEEKLY RECEIPT -->
-    <div id="receiptModal" class="modal flex items-center justify-center p-4">
-        <div class="bg-white p-10 w-full max-w-xs shadow-2xl relative border-t-8 border-leaf">
-            <div class="receipt-font text-[11px] text-black">
-                <p class="text-center font-bold text-xl mb-1 uppercase tracking-tighter">Botanical Hub</p>
-                <p class="text-center mb-6 text-[9px]">WEEKLY SPENDING RECEIPT</p>
-                <p id="receipt-date" class="mb-4"></p>
-                <div class="border-b border-dashed border-black mb-4"></div>
-                <div id="receipt-items" class="space-y-2 mb-6"></div>
-                <div class="border-b border-dashed border-black mb-4"></div>
-                <div class="flex justify-between font-bold text-sm"><span>TOTAL:</span><span id="receipt-total">₱0</span></div>
-                <p class="mt-10 text-center italic text-[9px]">--- THANK YOU ---</p>
+    <div id="syncModal" class="modal">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="cottage-card p-8 w-full max-w-md">
+                <h3 class="text-xl font-bold mb-4 text-leaf italic">Sync Code</h3>
+                <textarea id="syncDisplayArea" class="w-full h-48 text-[10px] mb-4 p-2 font-mono" readonly></textarea>
+                <div class="flex gap-2">
+                    <button onclick="copySyncText()" class="flex-1 btn-leaf py-2 italic text-sm">Copy Code</button>
+                    <button onclick="closeModal('syncModal')" class="flex-1 border border-leaf text-leaf rounded-lg py-2 text-sm italic">Close</button>
+                </div>
             </div>
-            <div class="mt-8 flex flex-col gap-2">
-                <button onclick="sendReceiptEmail()" class="w-full bg-forest text-white py-3 rounded font-bold text-xs uppercase tracking-widest shadow-md">Email Receipt</button>
-                <button onclick="closeModal('receiptModal')" class="w-full text-gray-400 text-[10px] py-1 text-center">Dismiss</button>
+        </div>
+    </div>
+
+    <div id="receiptModal" class="modal">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white p-10 w-full max-w-xs shadow-2xl relative border-t-8 border-leaf">
+                <div class="receipt-font text-[11px] text-black">
+                    <p class="text-center font-bold text-xl mb-1 uppercase tracking-tighter">Botanical Hub</p>
+                    <p class="text-center mb-6 text-[9px]">WEEKLY REPORT RECEIPT</p>
+                    <p id="receipt-date" class="mb-4"></p>
+                    <div class="border-b border-dashed border-black mb-4"></div>
+                    <div id="receipt-items" class="space-y-2 mb-6"></div>
+                    <div class="border-b border-dashed border-black mb-4"></div>
+                    <div class="flex justify-between font-bold text-sm"><span>TOTAL:</span><span id="receipt-total">₱0</span></div>
+                    <p class="mt-10 text-center italic text-[9px]">--- THANK YOU ---</p>
+                </div>
+                <button onclick="sendReceiptEmail()" class="w-full bg-forest text-white py-3 rounded font-bold text-xs mt-8 shadow-md">Email Receipt</button>
+                <button onclick="closeModal('receiptModal')" class="w-full text-gray-400 text-[10px] py-1 mt-2 text-center underline">Dismiss</button>
             </div>
         </div>
     </div>
@@ -218,11 +232,10 @@
             document.getElementById('current-date').innerText = new Date().toLocaleDateString('en-PH', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
         });
 
-        // Sunday Logic
         function checkSunday() {
-            if (new Date().getDay() === 0) {
-                document.getElementById('sunday-report-btn').classList.remove('hidden');
-            }
+            // 0 is Sunday. Toggle display style manually.
+            const isSunday = new Date().getDay() === 0;
+            document.getElementById('sunday-report-btn').style.display = isSunday ? 'block' : 'none';
         }
 
         function initCalendar() {
@@ -260,11 +273,10 @@
 
         function showDayDetails(dateStr) {
             const modal = document.getElementById('dayModal');
-            const content = document.getElementById('modalContent');
             document.getElementById('modalDate').innerText = dateStr;
             const logs = data.expenses.filter(e => e.date.startsWith(dateStr));
-            content.innerHTML = logs.length ? logs.map(e => `<div class="flex justify-between border-b border-forest/5 pb-2"><span>${CATEGORY_MAP[e.category]}</span><span class="font-bold">₱${e.amount.toLocaleString()}</span></div>`).join('') : '<p class="text-center italic opacity-40 py-4">No spending today.</p>';
-            modal.style.display = 'flex';
+            document.getElementById('modalContent').innerHTML = logs.length ? logs.map(e => `<div class="flex justify-between border-b border-forest/5 pb-2"><span>${CATEGORY_MAP[e.category]}</span><span class="font-bold">₱${e.amount.toLocaleString()}</span></div>`).join('') : '<p class="text-center italic opacity-40 py-4">No spending today.</p>';
+            modal.style.display = 'block';
         }
 
         function updateUI() {
@@ -344,12 +356,12 @@
             for (let cat in summary) { itemsCont.innerHTML += `<div class="flex justify-between"><span>${CATEGORY_MAP[cat]}</span><span>₱${summary[cat].toLocaleString()}</span></div>`; }
             document.getElementById('receipt-date').innerText = "DATE: " + new Date().toLocaleDateString();
             document.getElementById('receipt-total').innerText = "₱" + total.toLocaleString();
-            document.getElementById('receiptModal').style.display = 'flex';
+            document.getElementById('receiptModal').style.display = 'block';
         }
 
         function sendReceiptEmail() {
             const total = document.getElementById('receipt-total').innerText, date = document.getElementById('receipt-date').innerText;
-            let body = `Weekly Spending Report (${date})\n\n`;
+            let body = `Botanical Hub Weekly Report (${date})\n\n`;
             const now = new Date(); const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay()));
             data.expenses.filter(e => new Date(e.date) >= startOfWeek).forEach(e => { body += `${CATEGORY_MAP[e.category]}: ₱${e.amount}\n`; });
             body += `\nTOTAL: ${total}`;
@@ -359,26 +371,28 @@
         function addCalendarEvent() { const title = prompt("Event Name:"), date = prompt("Date (YYYY-MM-DD):"); if (title && date) { data.customEvents.push({ title, start: date, color: '#4A5D35', allDay: true }); saveData(); location.reload(); } }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
         
-        function saveData() { localStorage.setItem('botanicalData_v4', JSON.stringify(data)); }
+        function saveData() { localStorage.setItem('botanicalData_vFinal', JSON.stringify(data)); }
         function loadData() { 
-            const saved = localStorage.getItem('botanicalData_v4'); 
+            const saved = localStorage.getItem('botanicalData_vFinal'); 
             if (saved) { data = JSON.parse(saved); } 
             if(!data.meals) data.meals = []; 
         }
         
         function exportData() { 
             const code = btoa(JSON.stringify(data)); 
-            navigator.clipboard.writeText(code); 
-            alert("✅ Sync Code Copied!"); 
+            document.getElementById('syncDisplayArea').value = code;
+            document.getElementById('syncModal').style.display = 'block';
+        }
+        function copySyncText() {
+            const copyText = document.getElementById("syncDisplayArea");
+            copyText.select();
+            navigator.clipboard.writeText(copyText.value);
+            alert("✅ Code copied!");
         }
         function importData() { 
             const code = prompt("Paste Sync Code:"); 
             if (code) { 
-                try { 
-                    data = JSON.parse(atob(code)); 
-                    saveData(); 
-                    location.reload(); 
-                } catch(e) { alert("❌ Invalid Code."); } 
+                try { data = JSON.parse(atob(code)); saveData(); location.reload(); } catch(e) { alert("❌ Invalid."); } 
             } 
         }
     </script>
