@@ -3,79 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Botanical Hub: Sunday Edition</title>
+    <title>Botanical Hub: Payday Engine</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400&family=Quicksand:wght@300;500&display=swap" rel="stylesheet">
-    <!-- FullCalendar CDN -->
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
         :root {
-            --moss-bg: #C8D1B7; 
-            --forest: #2D3A22;  
-            --sage-glass: rgba(244, 247, 237, 0.96); 
-            --leaf: #5F7444;    
-            --work-brown: #8B5E3C;
-            --life-blue: #5F85DB;
-            --clay: #B07D62;
-            --over: #A64444;    
+            --moss-bg: #C8D1B7; --forest: #2D3A22; --sage-glass: rgba(244, 247, 237, 0.96); 
+            --leaf: #5F7444; --work-brown: #8B5E3C; --life-blue: #5F85DB; --clay: #B07D62; --over: #A64444;    
         }
-
         body {
             background-color: var(--moss-bg);
             background-image: url("data:image/svg+xml,%3Csvg width='52' height='26' viewBox='0 0 52 26' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239BA888' fill-opacity='0.15'%3E%3Cpath d='M10 10c0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6h2c0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4h-2c-2.21 0-4-1.79-4-4zm25.543 11.457c1.562 1.562 1.562 4.095 0 5.657-1.562 1.562-4.095 1.562-5.657 0-1.562-1.562-1.562-4.095 0-5.657 1.562-1.562 4.095-1.562 5.657 0zM15 0c3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4h-2c-2.21 0-4-1.79-4-4 0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6h2zm25.543 11.457c1.562 1.562 1.562 4.095 0 5.657-1.562 1.562-4.095 1.562-5.657 0-1.562-1.562-1.562-4.095 0-5.657 1.562-1.562 4.095-1.562 5.657 0z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-            font-family: 'Quicksand', sans-serif;
-            color: var(--forest);
-            min-height: 100vh;
+            font-family: 'Quicksand', sans-serif; color: var(--forest); min-height: 100vh;
         }
-
         h1, h2, h3 { font-family: 'Lora', serif; }
-
-        .cottage-card {
-            background: var(--sage-glass);
-            border-radius: 24px;
-            backdrop-filter: blur(12px);
-            box-shadow: 0 8px 32px rgba(45, 58, 34, 0.1);
-            border: 1px solid rgba(255,255,255,0.4);
-        }
-
-        .btn-leaf { background: var(--leaf); color: white; border-radius: 10px; font-weight: bold; transition: all 0.2s; }
-        .btn-leaf:hover { background: var(--fern); transform: translateY(-1px); }
-
-        /* FIXED: Force calendar height */
-        #calendar { 
-            background: white; 
-            border-radius: 15px; 
-            padding: 10px; 
-            border: 1px solid #C5CDB6;
-            min-height: 400px;
-        }
-
-        .work-text { color: var(--work-brown); }
-        .life-text { color: var(--life-blue); }
-        
-        input, select { background: white !important; border: 1px solid #BCC4AD !important; border-radius: 8px !important; padding: 6px 10px; font-size: 0.8rem; }
-        
-        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); }
-        .receipt-font { font-family: 'Courier New', Courier, monospace; }
-
+        .cottage-card { background: var(--sage-glass); border-radius: 24px; backdrop-filter: blur(12px); box-shadow: 0 8px 32px rgba(45, 58, 34, 0.1); border: 1px solid rgba(255,255,255,0.4); }
+        .btn-leaf { background: var(--leaf); color: white; border-radius: 10px; font-weight: bold; padding: 8px; transition: 0.2s; cursor: pointer; }
+        .btn-leaf:hover { background: var(--forest); }
+        input, select { background: white !important; border: 1px solid #BCC4AD !important; border-radius: 8px !important; padding: 6px 10px; font-size: 0.85rem; }
+        #calendar-box { background: white; border-radius: 15px; padding: 10px; border: 1px solid #C5CDB6; min-height: 400px; }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); }
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-thumb { background: var(--leaf); border-radius: 10px; }
-        .fc-event { cursor: pointer; }
     </style>
 </head>
 <body class="p-4 md:p-6">
 
     <div class="max-w-7xl mx-auto">
-        <!-- HEADER -->
         <header class="flex flex-col md:flex-row justify-between items-center mb-8 pb-4 border-b border-forest/10">
-            <div>
+            <div class="text-center md:text-left">
                 <h1 class="text-3xl font-bold text-forest italic">🌿 The Botanical Hub</h1>
                 <p id="current-date" class="text-fern italic"></p>
             </div>
-            <div class="flex gap-2 mt-4 md:mt-0">
-                <button id="sunday-report-btn" style="display:none" onclick="showWeeklyReceipt()" class="bg-white border border-leaf text-leaf px-4 py-2 rounded-full text-xs font-bold shadow-sm">Sunday Report</button>
+            <div class="flex flex-wrap gap-2 mt-4 md:mt-0 justify-center">
+                <!-- Sunday Button will appear dynamically -->
+                <button id="sunday-report-btn" style="display:none" onclick="showWeeklyReceipt()" class="bg-white border border-leaf text-leaf px-4 py-2 rounded-full text-xs font-bold shadow-sm hover:bg-leaf hover:text-white">Sunday Report</button>
                 <button onclick="exportData()" class="bg-leaf text-white px-4 py-2 rounded-full text-xs font-bold shadow-md">Sync</button>
                 <button onclick="importData()" class="bg-forest text-white px-4 py-2 rounded-full text-xs font-bold shadow-md">Restore</button>
             </div>
@@ -83,423 +48,317 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             
-            <!-- LEFT: LOGGING & PAYDAY -->
+            <!-- COLUMN 1: PAYDAY & LOGGING -->
             <div class="lg:col-span-4 space-y-6">
-                <div class="cottage-card p-5">
-                    <h2 class="text-lg font-bold mb-4 italic text-forest">Log Expense</h2>
-                    <div class="space-y-3">
-                        <div class="grid grid-cols-2 gap-2">
-                            <input type="date" id="log-date" class="w-full">
-                            <input type="time" id="log-time" class="w-full">
+                <!-- Permanent Payday Input -->
+                <div class="cottage-card p-5 border-t-8 border-leaf">
+                    <h2 class="text-lg font-bold mb-4 italic text-center">Payday Balances</h2>
+                    <div class="space-y-4">
+                        <div class="p-3 bg-white/50 rounded-xl">
+                            <label class="text-[10px] uppercase font-bold text-leaf">10th Salary</label>
+                            <div class="flex gap-2 mb-2">
+                                <input type="number" id="sal-10-input" class="w-full font-bold" placeholder="₱ 0.00">
+                                <button onclick="saveSalaries()" class="btn-leaf text-[10px]">Save</button>
+                            </div>
+                            <div class="flex justify-between text-xs pt-1 border-t italic">
+                                <span>Balance after all expenses:</span>
+                                <span id="bal-10-display" class="font-bold text-leaf">₱0</span>
+                            </div>
                         </div>
-                        <select id="main-cat" onchange="updateSubCats()" class="w-full text-sm">
-                            <option value="work">💼 Work Expense (Brown)</option>
-                            <option value="life">🏡 Life Expense (Blue)</option>
-                        </select>
-                        <select id="sub-cat" class="w-full text-sm"></select>
-                        <input type="number" id="log-amt" class="w-full text-sm font-bold" placeholder="₱ Amount">
-                        <button onclick="addExpense()" class="w-full btn-leaf py-2 shadow-sm">Save Entry</button>
+                        <div class="p-3 bg-white/50 rounded-xl">
+                            <label class="text-[10px] uppercase font-bold text-leaf">25th Salary</label>
+                            <div class="flex gap-2 mb-2">
+                                <input type="number" id="sal-25-input" class="w-full font-bold" placeholder="₱ 0.00">
+                                <button onclick="saveSalaries()" class="btn-leaf text-[10px]">Save</button>
+                            </div>
+                            <div class="flex justify-between text-xs pt-1 border-t italic">
+                                <span>Balance after all expenses:</span>
+                                <span id="bal-25-display" class="font-bold text-leaf">₱0</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="cottage-card p-5 border-t-8 border-leaf">
-                    <h2 class="text-lg font-bold mb-4 italic text-center">Payday Calculations</h2>
-                    <div class="space-y-4">
-                        <div class="p-3 bg-white/50 rounded-xl">
-                            <label class="text-[10px] uppercase font-bold text-leaf">10th Salary Input</label>
-                            <input type="number" id="sal-10" oninput="saveSalaries()" class="w-full mt-1 mb-2 font-bold" placeholder="₱ Enter Pay">
-                            <div class="flex justify-between text-xs font-bold">
-                                <span>Balance (until 25th 5pm):</span>
-                                <span id="bal-10" class="text-leaf">₱0</span>
-                            </div>
+                <!-- Log Expense -->
+                <div class="cottage-card p-5">
+                    <h2 class="text-lg font-bold mb-4 italic text-forest border-b pb-2">Log Expense</h2>
+                    <div class="space-y-3">
+                        <div class="grid grid-cols-2 gap-2">
+                            <input type="date" id="log-date">
+                            <input type="time" id="log-time">
                         </div>
-                        <div class="p-3 bg-white/50 rounded-xl">
-                            <label class="text-[10px] uppercase font-bold text-leaf">25th Salary Input</label>
-                            <input type="number" id="sal-25" oninput="saveSalaries()" class="w-full mt-1 mb-2 font-bold" placeholder="₱ Enter Pay">
-                            <div class="flex justify-between text-xs font-bold">
-                                <span>Balance (until 10th 5pm):</span>
-                                <span id="bal-25" class="text-leaf">₱0</span>
-                            </div>
-                        </div>
+                        <select id="main-cat" onchange="updateSubCats()" class="w-full">
+                            <option value="work">💼 Work (Brown)</option>
+                            <option value="life">🏡 Life (Blue)</option>
+                        </select>
+                        <select id="sub-cat" class="w-full"></select>
+                        <input type="number" id="log-amt" class="w-full font-bold" placeholder="₱ Amount">
+                        <button onclick="addExpense()" class="w-full btn-leaf shadow-sm">Save Entry</button>
                     </div>
                 </div>
             </div>
 
-            <!-- MIDDLE: STATUS & WISHLIST -->
+            <!-- COLUMN 2: WORK & LIFE SUMMARIES -->
             <div class="lg:col-span-4 space-y-6">
+                <!-- Work Section -->
                 <div class="cottage-card p-5 border-l-8 border-[var(--work-brown)]">
-                    <h3 class="text-sm font-bold work-text uppercase mb-4 tracking-tighter italic">Work Status</h3>
+                    <h3 class="text-xs font-bold uppercase mb-4" style="color:var(--work-brown)">Work Weekly Limits (M-F)</h3>
                     <div class="space-y-4">
                         <div>
-                            <div class="flex justify-between text-[11px] mb-1"><span>Dine Out (₱1k Max)</span><span id="w-dine-total">₱0</span></div>
+                            <div class="flex justify-between text-[11px] mb-1"><span>Work Dine Out (₱1k)</span><span id="w-dine-val" class="font-bold">₱0</span></div>
                             <div class="w-full bg-gray-200 h-1.5 rounded-full overflow-hidden"><div id="w-dine-bar" class="h-1.5" style="background:var(--work-brown); width:0%"></div></div>
                         </div>
                         <div>
-                            <div class="flex justify-between text-[11px] mb-1"><span>Lunch Grocery (₱1k Max)</span><span id="w-groc-total">₱0</span></div>
+                            <div class="flex justify-between text-[11px] mb-1"><span>Lunch Grocery (₱1k)</span><span id="w-groc-val" class="font-bold">₱0</span></div>
                             <div class="w-full bg-gray-200 h-1.5 rounded-full overflow-hidden"><div id="w-groc-bar" class="h-1.5" style="background:var(--work-brown); width:0%"></div></div>
                         </div>
-                        <div class="flex justify-between text-[11px] italic"><span>Work Transport:</span><span id="w-trans-total" class="font-bold">₱0</span></div>
+                        <div class="flex justify-between text-[11px] italic"><span>Transport Total:</span><span id="w-trans-val" class="font-bold">₱0</span></div>
                     </div>
                 </div>
 
+                <!-- Life Section -->
                 <div class="cottage-card p-5 border-l-8 border-[var(--life-blue)]">
-                    <h3 class="text-sm font-bold life-text uppercase mb-2 tracking-tighter italic">Life Expenses</h3>
-                    <div class="space-y-1 text-[11px] max-h-40 overflow-y-auto pr-1">
-                        <div class="flex justify-between border-b pb-1"><span>HH Food/Toil:</span><span id="l-hh" class="font-bold text-forest">₱0</span></div>
-                        <div class="flex justify-between border-b pb-1"><span>Beauty/Shop:</span><span id="l-beauty-shop" class="font-bold text-forest">₱0</span></div>
-                        <div class="flex justify-between border-b pb-1"><span>Family/Business:</span><span id="l-fambiz" class="font-bold text-forest">₱0</span></div>
-                        <div class="flex justify-between pt-1 text-leaf font-bold"><span>Bills (Rent/Utils):</span><span id="l-bills">₱0</span></div>
+                    <h3 class="text-xs font-bold uppercase mb-3" style="color:var(--life-blue)">Life Expenses Summary</h3>
+                    <div id="life-list" class="space-y-1 text-[11px] max-h-48 overflow-y-auto pr-1">
+                        <!-- Content Injected -->
                     </div>
                 </div>
 
-                <div class="cottage-card p-5 border-l-8 border-[var(--clay)]">
-                    <h3 class="text-sm font-bold text-[var(--clay)] uppercase mb-4 tracking-tighter italic">Wishlist</h3>
-                    <div class="flex gap-2 mb-2">
-                        <input type="text" id="wish-name" class="flex-1 text-xs" placeholder="Item">
-                        <input type="number" id="wish-price" class="w-20 text-xs" placeholder="₱">
-                        <button onclick="addWish()" class="btn-leaf px-3">+</button>
+                <!-- Wishlist -->
+                <div class="cottage-card p-5 border-l-8 border-clay">
+                    <h3 class="text-xs font-bold uppercase mb-2" style="color:var(--clay)">Wishlist</h3>
+                    <div class="flex gap-1 mb-2">
+                        <input type="text" id="wish-n" class="flex-1 text-[10px]" placeholder="Item">
+                        <input type="number" id="wish-p" class="w-14 text-[10px]" placeholder="₱">
+                        <button onclick="addWish()" class="btn-leaf px-2 py-0 text-xs">+</button>
                     </div>
-                    <ul id="wish-list" class="space-y-2 max-h-32 overflow-y-auto text-[11px]"></ul>
-                    <div class="mt-2 text-right font-bold text-[var(--clay)] text-xs">Total: <span id="wish-total">₱0</span></div>
+                    <ul id="wish-display" class="space-y-1 max-h-32 overflow-y-auto text-[10px]"></ul>
+                    <p class="text-right font-bold text-clay text-xs pt-1 border-t">Total: <span id="wish-total">₱0</span></p>
                 </div>
             </div>
 
-            <!-- RIGHT: MEALS & CALENDAR -->
+            <!-- COLUMN 3: MEAL & CALENDAR -->
             <div class="lg:col-span-4 space-y-6">
                 <div class="cottage-card p-5">
-                    <h2 class="text-lg font-bold mb-4 italic text-center text-forest underline">Meal Planner</h2>
-                    <div class="flex gap-2 mb-4">
-                        <input type="text" id="recipe-in" class="w-full text-xs" placeholder="Hamburger...">
-                        <button onclick="addRecipe()" class="btn-leaf px-3">+</button>
+                    <h2 class="text-sm font-bold mb-3 italic text-center underline">Meal Planner</h2>
+                    <div class="flex gap-2 mb-3">
+                        <input type="text" id="meal-in" class="w-full text-xs" placeholder="e.g. Hamburger">
+                        <button onclick="addMeal()" class="btn-leaf px-3 text-xs">+</button>
                     </div>
-                    <div id="meal-list" class="space-y-3 max-h-56 overflow-y-auto"></div>
+                    <div id="meal-display" class="space-y-3 max-h-48 overflow-y-auto"></div>
                 </div>
 
                 <div class="cottage-card p-4">
                     <div class="flex justify-between items-center mb-2">
-                        <h3 class="text-sm font-bold italic">Gatherings</h3>
-                        <button onclick="addCalendarEvent()" class="text-[10px] bg-leaf/20 text-leaf font-bold px-2 py-1 rounded-full transition hover:bg-leaf hover:text-white">+ Add Event</button>
+                        <h3 class="text-xs font-bold italic">Gatherings</h3>
+                        <button onclick="addEvent()" class="text-[9px] bg-leaf/20 text-leaf font-bold px-2 py-1 rounded-full">+ Add Event</button>
                     </div>
-                    <div id="calendar"></div>
+                    <div id="calendar-box"><div id="calendar"></div></div>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- MODALS -->
-    <div id="dayModal" class="modal">
-        <div class="flex items-center justify-center min-h-screen p-4">
-            <div class="cottage-card p-6 w-full max-w-sm">
-                <h3 id="modalDate" class="text-xl font-bold mb-4 italic text-center text-leaf"></h3>
-                <div id="modalContent" class="space-y-2 text-sm max-h-60 overflow-y-auto mb-6"></div>
-                <button onclick="closeModal('dayModal')" class="w-full btn-leaf py-2">Close</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="syncModal" class="modal">
-        <div class="flex items-center justify-center min-h-screen p-4">
-            <div class="cottage-card p-6 w-full max-w-md">
-                <h3 class="text-lg font-bold mb-2 italic text-leaf">Sync Code</h3>
-                <p class="text-[10px] mb-2 opacity-70 italic">Copy this entire code to your other device.</p>
-                <textarea id="syncBox" class="w-full h-48 text-[9px] p-2 mb-4 border font-mono" readonly></textarea>
-                <button onclick="copySync()" class="w-full btn-leaf py-2 mb-2">Copy to Clipboard</button>
-                <button onclick="closeModal('syncModal')" class="w-full border border-leaf py-1 rounded-xl text-xs">Close</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="receiptModal" class="modal">
-        <div class="flex items-center justify-center min-h-screen p-4">
-            <div class="bg-white p-8 w-full max-w-xs shadow-2xl relative border-t-8 border-leaf">
-                <div class="receipt-font text-[11px] text-black">
-                    <p class="text-center font-bold text-lg mb-1 uppercase tracking-tighter">Botanical Hub</p>
-                    <p class="text-center mb-6 text-[9px]">WEEKLY SPENDING RECEIPT</p>
-                    <p id="receipt-date" class="mb-4"></p>
-                    <div class="border-b border-dashed border-black mb-4"></div>
-                    <div id="receipt-items" class="space-y-2 mb-6"></div>
-                    <div class="border-b border-dashed border-black mb-4"></div>
-                    <div class="flex justify-between font-bold text-sm"><span>TOTAL:</span><span id="receipt-total">₱0</span></div>
-                    <p class="mt-10 text-center italic text-[9px]">--- END OF REPORT ---</p>
-                </div>
-                <button onclick="sendReceiptEmail()" class="w-full bg-forest text-white py-3 rounded font-bold text-xs mt-6">Email Receipt</button>
-                <button onclick="closeModal('receiptModal')" class="w-full text-gray-400 text-[10px] py-1 mt-2 underline text-center block">Dismiss</button>
-            </div>
-        </div>
-    </div>
+    <div id="dayModal" class="modal"><div class="flex items-center justify-center min-h-screen p-4"><div class="cottage-card p-6 w-full max-w-sm"><h3 id="modalDate" class="text-xl font-bold mb-4 italic text-center text-leaf"></h3><div id="modalContent" class="space-y-2 text-sm max-h-60 overflow-y-auto mb-6"></div><button onclick="closeModal('dayModal')" class="w-full btn-leaf">Close</button></div></div></div>
+    <div id="syncModal" class="modal"><div class="flex items-center justify-center min-h-screen p-4"><div class="cottage-card p-6 w-full max-w-md"><h3 class="text-lg font-bold mb-2 italic">Sync Code</h3><textarea id="syncBox" class="w-full h-48 text-[9px] p-2 mb-4 border font-mono" readonly></textarea><button onclick="copySync()" class="w-full btn-leaf py-2 mb-2">Copy Code</button><button onclick="closeModal('syncModal')" class="w-full border py-1 rounded-xl text-xs text-center block">Close</button></div></div></div>
+    <div id="receiptModal" class="modal"><div class="flex items-center justify-center min-h-screen p-4"><div class="bg-white p-8 w-full max-w-xs shadow-2xl border-t-8 border-leaf text-black text-[11px] font-mono"><p class="text-center font-bold text-lg">BOTANICAL HUB</p><p class="text-center mb-4 italic">End of Week Receipt</p><div id="r-items" class="space-y-2 mb-4 border-y border-dashed border-black py-4"></div><div class="flex justify-between font-bold"><span>TOTAL:</span><span id="r-total">₱0</span></div><p class="mt-6 text-center text-[9px] opacity-50 italic">Generated on Sunday</p><button onclick="window.print()" class="w-full bg-forest text-white py-2 rounded mt-4 font-bold">Print Receipt</button><button onclick="closeModal('receiptModal')" class="w-full text-gray-400 mt-2 text-center underline block">Dismiss</button></div></div></div>
 
     <script>
-        let data = { 
+        // CONFIG & STATE
+        let data = {
             expenses: [], meals: [], wishlist: [], customEvents: [],
             salaries: { s10: 0, s25: 0 }
         };
 
         const SUBS = {
-            work: { transport: "🚗 Transport", dineout: "🍽️ Work Dine Out", grocery_lunch: "🍱 Lunch Grocery" },
-            life: {
-                hh_food: "🥗 HH Food", hh_toiletries: "🧻 HH Toiletries", skincare: "✨ Skincare",
-                makeup: "💄 Makeup", shop_store: "🏢 Store Shopping", shop_online: "🛍️ Online Shopping",
-                business: "💼 Business", family: "👨‍👩‍👧 Family", water: "💧 Water Bill",
-                elec: "⚡ Electricity", wifi: "🌐 WiFi", rent: "🏠 Rent"
-            }
+            work: { transport: "🚗 Transport", dineout: "🍽️ Dine Out", grocery_lunch: "🍱 Lunch Grocery" },
+            life: { hh_food: "🥗 HH Food", hh_toil: "🧻 HH Toiletries", skin: "✨ Skincare", makeup: "💄 Makeup", store: "🏢 Store Shopping", online: "🛍️ Online Shopping", biz: "💼 Business", fam: "👨‍👩‍👧 Family", water: "💧 Water", elec: "⚡ Elec", wifi: "🌐 WiFi", rent: "🏠 Rent" }
         };
 
         let calendar;
 
         document.addEventListener('DOMContentLoaded', () => {
-            loadData();
-            updateSubCats();
+            loadAll();
             
+            // Set default date inputs
             const now = new Date();
             document.getElementById('log-date').value = now.toISOString().split('T')[0];
             document.getElementById('log-time').value = now.toTimeString().slice(0,5);
 
-            updateUI();
-            initCalendar();
+            // Populate Category DDL
+            updateSubCats();
             
-            document.getElementById('current-date').innerText = now.toLocaleDateString('en-PH', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
-            if (now.getDay() === 0) document.getElementById('sunday-report-btn').style.display = 'block';
+            // Render UI
+            updateUI();
+            
+            // Force Calendar rendering
+            setTimeout(() => {
+                initCalendar();
+                document.getElementById('current-date').innerText = now.toLocaleDateString('en-PH', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+                if(now.getDay() === 0) document.getElementById('sunday-report-btn').style.display = 'block';
+            }, 500);
         });
 
         function updateSubCats() {
-            const main = document.getElementById('main-cat').value;
-            const sub = document.getElementById('sub-cat');
-            sub.innerHTML = '';
-            for (let key in SUBS[main]) {
-                sub.innerHTML += `<option value="${key}">${SUBS[main][key]}</option>`;
-            }
-        }
-
-        function initCalendar() {
-            const calendarEl = document.getElementById('calendar');
-            if (!calendarEl) return;
-
-            calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                headerToolbar: { left: 'prev,next', center: 'title', right: '' },
-                height: 400,
-                events: function(info, successCallback) {
-                    let events = [];
-                    let curr = new Date(info.start);
-                    while (curr <= info.end) {
-                        let y = curr.getFullYear(), m = String(curr.getMonth()+1).padStart(2, '0');
-                        events.push({ title: '💰 Pay', start: `${y}-${m}-10`, color: '#5F7444', allDay: true });
-                        events.push({ title: '💰 Pay', start: `${y}-${m}-25`, color: '#5F7444', allDay: true });
-                        events.push({ title: '🏠 Rent', start: `${y}-${m}-10`, color: '#B07D62', allDay: true });
-                        curr.setMonth(curr.getMonth() + 1);
-                    }
-                    successCallback([...events, ...data.customEvents]);
-                },
-                dateClick: (info) => showDayDetails(info.dateStr),
-                eventClick: (info) => {
-                    const isCustom = data.customEvents.some(e => e.title === info.event.title && e.start === info.event.startStr);
-                    if (isCustom && confirm(`Delete event "${info.event.title}"?`)) {
-                        data.customEvents = data.customEvents.filter(e => !(e.title === info.event.title && e.start === info.event.startStr));
-                        saveData(); calendar.refetchEvents();
-                    }
-                }
-            });
-            calendar.render();
-        }
-
-        function addCalendarEvent() {
-            const title = prompt("Event Name:");
-            if (!title) return;
-            const date = prompt("Date (YYYY-MM-DD):", new Date().toISOString().split('T')[0]);
-            if (!date) return;
-            data.customEvents.push({ title: title, start: date, color: '#B07D62', allDay: true });
-            saveData(); calendar.refetchEvents();
+            const m = document.getElementById('main-cat').value;
+            document.getElementById('sub-cat').innerHTML = Object.entries(SUBS[m]).map(([k,v]) => `<option value="${k}">${v}</option>`).join('');
         }
 
         function addExpense() {
-            const amt = parseFloat(document.getElementById('log-amt').value);
-            if (!amt) return;
-            const dateVal = document.getElementById('log-date').value;
-            const timeVal = document.getElementById('log-time').value;
-            const timestamp = new Date(`${dateVal}T${timeVal}`).getTime();
-            
+            const amt = parseFloat(document.getElementById('log-amt').value); if(!amt) return;
+            const date = document.getElementById('log-date').value;
+            const time = document.getElementById('log-time').value;
+            const ts = new Date(`${date}T${time}`).getTime();
+
             data.expenses.push({ 
                 main: document.getElementById('main-cat').value, 
                 sub: document.getElementById('sub-cat').value, 
-                amt, date: dateVal, timestamp 
+                amt, date, ts 
             });
+            
             document.getElementById('log-amt').value = '';
-            saveData(); updateUI();
+            saveAndRefresUI();
+        }
+
+        function saveSalaries() {
+            data.salaries.s10 = parseFloat(document.getElementById('sal-10-input').value) || 0;
+            data.salaries.s25 = parseFloat(document.getElementById('sal-25-input').value) || 0;
+            saveAndRefresUI();
+            alert("Salaries Locked & Saved!");
         }
 
         function updateUI() {
-            document.getElementById('sal-10').value = data.salaries.s10;
-            document.getElementById('sal-25').value = data.salaries.s25;
+            // Fill Inputs
+            document.getElementById('sal-10-input').value = data.salaries.s10;
+            document.getElementById('sal-25-input').value = data.salaries.s25;
 
-            let wDine = 0, wGroc = 0, wTrans = 0, lHH = 0, lBeautyShop = 0, lFam = 0, lBills = 0;
+            // Date markers for Sunday Logic
             const now = new Date();
             const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay())).setHours(0,0,0,0);
 
+            // Calculation Buckets
+            let wDine = 0, wGroc = 0, wTrans = 0;
+            let lifeBucket = {}; Object.keys(SUBS.life).forEach(k => lifeBucket[k] = 0);
+            
+            // Cycle Buckets
+            const yr = new Date().getFullYear(), mo = new Date().getMonth();
+            const c1Start = new Date(yr, mo, 10, 0, 0).getTime();
+            const c1End = new Date(yr, mo, 25, 17, 0).getTime(); // 25th 5pm
+            const c2Start = new Date(yr, mo, 25, 18, 0).getTime(); // 25th 6pm
+            const c2End = new Date(yr, mo + 1, 10, 17, 0).getTime(); // Next month 10th 5pm
+
+            let c1Spent = 0, c2Spent = 0;
+
             data.expenses.forEach(e => {
-                if (e.timestamp >= startOfWeek) {
+                // ALL expenses subtract from payday cycles
+                if (e.ts >= c1Start && e.ts <= c1End) c1Spent += e.amt;
+                if (e.ts >= c2Start && e.ts <= c2End) c2Spent += e.amt;
+
+                // Weekly Work stats (M-F)
+                if (e.ts >= startOfWeek && e.main === 'work') {
                     if (e.sub === 'dineout') wDine += e.amt;
                     if (e.sub === 'grocery_lunch') wGroc += e.amt;
                     if (e.sub === 'transport') wTrans += e.amt;
                 }
-                if (e.sub === 'hh_food' || e.sub === 'hh_toiletries') lHH += e.amt;
-                if (['skincare','makeup','shop_store','shop_online'].includes(e.sub)) lBeautyShop += e.amt;
-                if (e.sub === 'business' || e.sub === 'family') lFam += e.amt;
-                if (['water', 'elec', 'wifi', 'rent'].includes(e.sub)) lBills += e.amt;
+
+                // Life stats (Running)
+                if (e.main === 'life') {
+                    lifeBucket[e.sub] += e.amt;
+                }
             });
 
-            document.getElementById('w-dine-total').innerText = `₱${wDine.toLocaleString()}`;
+            // Update DOM
+            document.getElementById('bal-10-display').innerText = `₱${(data.salaries.s10 - c1Spent).toLocaleString()}`;
+            document.getElementById('bal-25-display').innerText = `₱${(data.salaries.s25 - c2Spent).toLocaleString()}`;
+            
+            document.getElementById('w-dine-val').innerText = `₱${wDine}`;
             document.getElementById('w-dine-bar').style.width = Math.min((wDine/1000)*100, 100) + '%';
-            document.getElementById('w-groc-total').innerText = `₱${wGroc.toLocaleString()}`;
+            document.getElementById('w-groc-val').innerText = `₱${wGroc}`;
             document.getElementById('w-groc-bar').style.width = Math.min((wGroc/1000)*100, 100) + '%';
-            document.getElementById('w-trans-total').innerText = `₱${wTrans.toLocaleString()}`;
-            document.getElementById('l-hh').innerText = `₱${lHH.toLocaleString()}`;
-            document.getElementById('l-beauty-shop').innerText = `₱${lBeautyShop.toLocaleString()}`;
-            document.getElementById('l-fambiz').innerText = `₱${lFam.toLocaleString()}`;
-            document.getElementById('l-bills').innerText = `₱${lBills.toLocaleString()}`;
+            document.getElementById('w-trans-val').innerText = `₱${wTrans}`;
 
-            calculateCycleBalances();
-            renderMeals();
-            renderWishlist();
+            document.getElementById('life-list').innerHTML = Object.entries(lifeBucket).map(([k, v]) => `
+                <div class="flex justify-between border-b pb-1"><span>${SUBS.life[k]}</span><span class="font-bold">₱${v.toLocaleString()}</span></div>
+            `).join('');
+
+            renderMeals(); renderWish();
         }
 
-        function calculateCycleBalances() {
-            const today = new Date();
-            const year = today.getFullYear(), month = today.getMonth();
-            const c1Start = new Date(year, month, 10, 0, 0).getTime();
-            const c1End = new Date(year, month, 25, 17, 0).getTime();
-            const c2Start = new Date(year, month, 25, 17, 1).getTime();
-            const c2End = new Date(year, month + 1, 10, 17, 0).getTime();
+        // --- SUB COMPONENTS ---
+        function addWish() {
+            const n = document.getElementById('wish-n').value, p = parseFloat(document.getElementById('wish-p').value) || 0;
+            if(n) data.wishlist.push({ id: Date.now(), n, p });
+            document.getElementById('wish-n').value = ''; document.getElementById('wish-p').value = '';
+            saveAndRefresUI();
+        }
+        function renderWish() {
+            let t = 0; document.getElementById('wish-display').innerHTML = data.wishlist.map(w => { t += w.p; return `<li class="flex justify-between bg-white/40 p-1 rounded group"><span>${w.n} (₱${w.p})</span><button onclick="remWish(${w.id})" class="text-over opacity-0 group-hover:opacity-100 px-1">✕</button></li>` }).join('');
+            document.getElementById('wish-total').innerText = `₱${t.toLocaleString()}`;
+        }
+        function remWish(id) { data.wishlist = data.wishlist.filter(w => w.id !== id); saveAndRefresUI(); }
 
-            let s1 = 0, s2 = 0;
-            data.expenses.forEach(e => {
-                if (e.timestamp >= c1Start && e.timestamp <= c1End) s1 += e.amt;
-                if (e.timestamp >= c2Start && e.timestamp <= c2End) s2 += e.amt;
+        function addMeal() {
+            const n = document.getElementById('meal-in').value; if(n) data.meals.push({ id: Date.now(), n, ings: [] });
+            document.getElementById('meal-in').value = ''; saveAndRefresUI();
+        }
+        function addIng(id) {
+            const v = document.getElementById(`in-${id}`).value; if(v) data.meals.find(m => m.id === id).ings.push({ t: v, c: false });
+            saveAndRefresUI();
+        }
+        function renderMeals() {
+            document.getElementById('meal-display').innerHTML = data.meals.map(m => `
+                <div class="border border-dashed border-leaf/30 p-2 rounded bg-white/20">
+                    <div class="flex justify-between mb-1"><span class="font-bold text-xs underline">🍽️ ${m.n}</span><button onclick="remMeal(${m.id})" class="text-over text-[9px]">Rem</button></div>
+                    <div class="ml-4 space-y-1">
+                        ${m.ings.map((n, i) => `<div class="flex items-center gap-2 text-[10px]"><input type="checkbox" ${n.c?'checked':''} onchange="tgI(${m.id},${i})"><span>${n.t}</span></div>`).join('')}
+                        <div class="flex gap-1 mt-1"><input id="in-${m.id}" class="w-full text-[9px]" placeholder="+ ing"><button onclick="addIng(${m.id})" class="btn-leaf px-1 text-[9px]">+</button></div>
+                    </div>
+                </div>`).join('');
+        }
+        function remMeal(id) { data.meals = data.meals.filter(m => m.id !== id); saveAndRefresUI(); }
+        function tgI(mId, i) { data.meals.find(x => x.id === mId).ings[i].c = !data.meals.find(x => x.id === mId).ings[i].c; saveAndRefresUI(); }
+
+        function initCalendar() {
+            calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
+                initialView: 'dayGridMonth', headerToolbar: { left: 'prev,next', center: 'title', right: '' }, height: 380,
+                events: function(info, sc) {
+                    let evs = []; let c = new Date(info.start);
+                    while (c <= info.end) {
+                        let y = c.getFullYear(), m = String(c.getMonth()+1).padStart(2, '0');
+                        evs.push({ title: '💰 Pay', start: `${y}-${m}-10`, color: '#5F7444', allDay: true }, { title: '💰 Pay', start: `${y}-${m}-25`, color: '#5F7444', allDay: true }, { title: '🏠 Rent', start: `${y}-${m}-10`, color: '#B07D62', allDay: true });
+                        c.setMonth(c.getMonth() + 1);
+                    }
+                    sc([...evs, ...data.customEvents]);
+                },
+                dateClick: (info) => showDayDetails(info.dateStr)
             });
-            document.getElementById('bal-10').innerText = `₱${(data.salaries.s10 - s1).toLocaleString()}`;
-            document.getElementById('bal-25').innerText = `₱${(data.salaries.s25 - s2).toLocaleString()}`;
+            calendar.render();
         }
 
-        function showDayDetails(dateStr) {
-            const logs = data.expenses.filter(e => e.date === dateStr);
-            const content = document.getElementById('modalContent');
-            document.getElementById('modalDate').innerText = dateStr;
-            content.innerHTML = logs.length ? logs.map(e => `
-                <div class="flex justify-between border-b pb-1 text-[11px]">
-                    <span class="${e.main === 'work' ? 'work-text' : 'life-text'}">${SUBS[e.main][e.sub]}</span>
-                    <span class="font-bold">₱${e.amt.toLocaleString()}</span>
-                </div>
-            `).join('') : '<p class="text-center opacity-40 py-4 italic">No logs</p>';
+        function showDayDetails(d) {
+            const logs = data.expenses.filter(e => e.date === d);
+            document.getElementById('modalDate').innerText = d;
+            document.getElementById('modalContent').innerHTML = logs.map(e => `<div class="flex justify-between border-b pb-1"><span>${SUBS[e.main][e.sub]}</span><span class="font-bold">₱${e.amt}</span></div>`).join('') || '<p class="text-center opacity-40">No entries.</p>';
             document.getElementById('dayModal').style.display = 'block';
         }
 
         function showWeeklyReceipt() {
-            const now = new Date();
-            const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay())).setHours(0,0,0,0);
-            const weeklyLogs = data.expenses.filter(e => e.timestamp >= startOfWeek);
-            let total = 0, itemsHtml = '';
-            
-            const summary = {};
-            weeklyLogs.forEach(e => {
-                const label = SUBS[e.main][e.sub];
-                summary[label] = (summary[label] || 0) + e.amt;
-                total += e.amt;
-            });
-
-            for (let key in summary) {
-                itemsHtml += `<div class="flex justify-between"><span>${key}</span><span>₱${summary[key].toLocaleString()}</span></div>`;
-            }
-
-            document.getElementById('receipt-items').innerHTML = itemsHtml || '<p class="text-center italic text-xs">No entries this week.</p>';
-            document.getElementById('receipt-total').innerText = "₱" + total.toLocaleString();
-            document.getElementById('receipt-date').innerText = "DATE: " + new Date().toLocaleDateString();
+            const start = new Date(new Date().setDate(new Date().getDate() - new Date().getDay())).setHours(0,0,0,0);
+            const weekly = data.expenses.filter(e => e.ts >= start); let t = 0;
+            document.getElementById('r-items').innerHTML = weekly.map(e => { t += e.amt; return `<div class="flex justify-between"><span>${SUBS[e.main][e.sub]}</span><span>₱${e.amt}</span></div>` }).join('') || 'No records';
+            document.getElementById('r-total').innerText = "₱" + t.toLocaleString();
             document.getElementById('receiptModal').style.display = 'block';
         }
 
-        function sendReceiptEmail() {
-            const total = document.getElementById('receipt-total').innerText;
-            const dateStr = document.getElementById('receipt-date').innerText;
-            let body = `Weekly Receipt (${dateStr})\n\n`;
-            const now = new Date();
-            const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay())).setHours(0,0,0,0);
-            data.expenses.filter(e => e.timestamp >= startOfWeek).forEach(e => {
-                body += `${SUBS[e.main][e.sub]}: ₱${e.amt}\n`;
-            });
-            body += `\nTOTAL: ${total}`;
-            window.location.href = `mailto:?subject=Botanical Hub Receipt&body=${encodeURIComponent(body)}`;
-        }
-
-        function addWish() {
-            const name = document.getElementById('wish-name').value, price = parseFloat(document.getElementById('wish-price').value) || 0;
-            if (!name) return;
-            data.wishlist.push({ id: Date.now(), name, price });
-            document.getElementById('wish-name').value = ''; document.getElementById('wish-price').value = '';
-            saveData(); renderWishlist();
-        }
-        function renderWishlist() {
-            const cont = document.getElementById('wish-list'); let t = 0;
-            cont.innerHTML = data.wishlist.map(w => { t += w.price; return `<li class="flex justify-between bg-white/40 p-2 rounded-lg group shadow-sm"><span>${w.name} - ₱${w.price.toLocaleString()}</span><button onclick="removeWish(${w.id})" class="text-over opacity-0 group-hover:opacity-100 transition px-1"><i class="fas fa-trash-can"></i></button></li>`; }).join('');
-            document.getElementById('wish-total').innerText = `₱${t.toLocaleString()}`;
-        }
-        function removeWish(id) { data.wishlist = data.wishlist.filter(w => w.id !== id); saveData(); renderWishlist(); }
-
-        function addRecipe() {
-            const name = document.getElementById('recipe-in').value; if (!name) return;
-            data.meals.push({ id: Date.now(), name, ings: [] });
-            document.getElementById('recipe-in').value = ''; saveData(); renderMeals();
-        }
-        function addIng(id) {
-            const val = document.getElementById(`ing-input-${id}`).value; if (!val) return;
-            data.meals.find(m => m.id === id).ings.push({ text: val, checked: false });
-            saveData(); renderMeals();
-        }
-        function renderMeals() {
-            const cont = document.getElementById('meal-list');
-            cont.innerHTML = data.meals.map(m => `
-                <div class="border border-dashed border-leaf/30 p-2 rounded-lg bg-white/20">
-                    <div class="flex justify-between items-center mb-1">
-                        <span class="font-bold text-xs uppercase underline">🍽️ ${m.name}</span>
-                        <button onclick="removeMeal(${m.id})" class="text-[9px] text-over uppercase">Delete</button>
-                    </div>
-                    <div class="ml-4 space-y-1">
-                        ${m.ings.map((n, i) => `<div class="flex items-center gap-2 text-[10px]"><input type="checkbox" ${n.checked ? 'checked' : ''} onchange="toggleIng(${m.id}, ${i})" class="accent-leaf h-3 w-3"><span class="${n.checked ? 'line-through opacity-50' : ''}">${n.text}</span></div>`).join('')}
-                        <div class="flex gap-1 mt-1"><input id="ing-input-${m.id}" class="w-full text-[9px]" placeholder="+ ing"><button onclick="addIng(${m.id})" class="btn-leaf px-1">+</button></div>
-                    </div>
-                </div>
-            `).join('');
-        }
-        function removeMeal(id) { data.meals = data.meals.filter(m => m.id !== id); saveData(); renderMeals(); }
-        function toggleIng(mId, i) { const m = data.meals.find(x => x.id === mId); m.ings[i].checked = !m.ings[i].checked; saveData(); renderMeals(); }
-
-        function saveSalaries() { data.salaries.s10 = parseFloat(document.getElementById('sal-10').value) || 0; data.salaries.s25 = parseFloat(document.getElementById('sal-25').value) || 0; saveData(); calculateCycleBalances(); }
+        // --- CORE SYSTEM ---
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-        
-        function saveData() { localStorage.setItem('botanical_vSundayFinal', JSON.stringify(data)); }
-        function loadData() { 
-            const saved = localStorage.getItem('botanical_vSundayFinal'); 
-            if (saved) data = JSON.parse(saved); 
-            if (!data.meals) data.meals = []; if (!data.wishlist) data.wishlist = []; if (!data.customEvents) data.customEvents = [];
-        }
-        
-        function exportData() {
-            const code = btoa(unescape(encodeURIComponent(JSON.stringify(data))));
-            document.getElementById('syncBox').value = code;
-            document.getElementById('syncModal').style.display = 'block';
-        }
-        function copySync() {
-            const area = document.getElementById('syncBox');
-            area.select();
-            document.execCommand('copy');
-            alert("✅ Sync code copied!");
-        }
-        function importData() {
-            const code = prompt("Paste Restore Code:");
-            if (code) {
-                try {
-                    data = JSON.parse(decodeURIComponent(escape(atob(code))));
-                    saveData(); location.reload();
-                } catch(e) { alert("❌ Invalid code."); }
-            }
-        }
+        function saveAndRefresUI() { localStorage.setItem('botanical_vPayday', JSON.stringify(data)); updateUI(); }
+        function loadAll() { const saved = localStorage.getItem('botanical_vPayday'); if (saved) data = JSON.parse(saved); }
+        function addEvent() { const t = prompt("Name:"), d = prompt("Date (YYYY-MM-DD):"); if(t&&d) { data.customEvents.push({ title: t, start: d, color: '#B07D62', allDay: true }); saveAndRefresUI(); calendar.refetchEvents(); } }
+        function exportData() { document.getElementById('syncBox').value = btoa(unescape(encodeURIComponent(JSON.stringify(data)))); document.getElementById('syncModal').style.display = 'block'; }
+        function copySync() { const b = document.getElementById('syncBox'); b.select(); document.execCommand('copy'); alert("Code copied!"); }
+        function importData() { const c = prompt("Paste Code:"); if (c) { data = JSON.parse(decodeURIComponent(escape(atob(c)))); saveAndRefresUI(); location.reload(); } }
     </script>
 </body>
 </html>
