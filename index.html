@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Botanical Hub: Precise Edition</title>
+    <title>Botanical Hub: Sunday Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400&family=Quicksand:wght@300;500&display=swap" rel="stylesheet">
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
@@ -46,10 +46,10 @@
         input, select { background: white; border: 1px solid #BCC4AD !important; border-radius: 8px !important; padding: 6px 10px; font-size: 0.8rem; }
         
         .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); }
-        
+        .receipt-font { font-family: 'Courier New', Courier, monospace; }
+
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-thumb { background: var(--leaf); border-radius: 10px; }
-        
         .fc-event { cursor: pointer; }
     </style>
 </head>
@@ -63,7 +63,7 @@
                 <p id="current-date" class="text-fern italic"></p>
             </div>
             <div class="flex gap-2 mt-4 md:mt-0">
-                 <button id="sunday-report-btn" style="display:none" onclick="showWeeklyReceipt()" class="bg-white border border-leaf text-leaf px-4 py-2 rounded-full text-xs font-bold shadow-sm">Sunday Report</button>
+                <button id="sunday-report-btn" style="display:none" onclick="showWeeklyReceipt()" class="bg-white border border-leaf text-leaf px-4 py-2 rounded-full text-xs font-bold shadow-sm">Sunday Report</button>
                 <button onclick="exportData()" class="bg-leaf text-white px-4 py-2 rounded-full text-xs font-bold">Sync</button>
                 <button onclick="importData()" class="bg-forest text-white px-4 py-2 rounded-full text-xs font-bold">Restore</button>
             </div>
@@ -71,9 +71,9 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             
-            <!-- LEFT: LOGGING & Salary (4/12) -->
+            <!-- LEFT: LOGGING & PAYDAY -->
             <div class="lg:col-span-4 space-y-6">
-                <div class="cottage-card p-5 shadow-inner">
+                <div class="cottage-card p-5">
                     <h2 class="text-lg font-bold mb-4 italic text-forest">Log Expense</h2>
                     <div class="space-y-3">
                         <div class="grid grid-cols-2 gap-2">
@@ -90,22 +90,22 @@
                     </div>
                 </div>
 
-                <div class="cottage-card p-5 border-t-8 border-leaf text-center">
-                    <h2 class="text-lg font-bold mb-4 italic">Payday Cycles</h2>
+                <div class="cottage-card p-5 border-t-8 border-leaf">
+                    <h2 class="text-lg font-bold mb-4 italic text-center">Payday Calculations</h2>
                     <div class="space-y-4">
-                        <div class="p-3 bg-white/50 rounded-xl text-left">
-                            <label class="text-[10px] uppercase font-bold text-leaf">10th Salary</label>
+                        <div class="p-3 bg-white/50 rounded-xl">
+                            <label class="text-[10px] uppercase font-bold text-leaf">10th Salary Input</label>
                             <input type="number" id="sal-10" oninput="saveSalaries()" class="w-full mt-1 mb-2 font-bold" placeholder="₱ Enter Pay">
                             <div class="flex justify-between text-xs font-bold">
-                                <span>Balance (to 25th 5pm):</span>
+                                <span>Balance (until 25th 5pm):</span>
                                 <span id="bal-10" class="text-leaf">₱0</span>
                             </div>
                         </div>
-                        <div class="p-3 bg-white/50 rounded-xl text-left">
-                            <label class="text-[10px] uppercase font-bold text-leaf">25th Salary</label>
+                        <div class="p-3 bg-white/50 rounded-xl">
+                            <label class="text-[10px] uppercase font-bold text-leaf">25th Salary Input</label>
                             <input type="number" id="sal-25" oninput="saveSalaries()" class="w-full mt-1 mb-2 font-bold" placeholder="₱ Enter Pay">
                             <div class="flex justify-between text-xs font-bold">
-                                <span>Balance (to 10th 5pm):</span>
+                                <span>Balance (until 10th 5pm):</span>
                                 <span id="bal-25" class="text-leaf">₱0</span>
                             </div>
                         </div>
@@ -113,38 +113,38 @@
                 </div>
             </div>
 
-            <!-- MIDDLE: WORK, LIFE, WISHLIST (4/12) -->
+            <!-- MIDDLE: WORK, LIFE, WISHLIST -->
             <div class="lg:col-span-4 space-y-6">
                 <div class="cottage-card p-5 border-l-8 border-[var(--work-brown)]">
-                    <h3 class="text-xs font-bold work-text uppercase tracking-widest mb-4">Work Expenses (M-F)</h3>
+                    <h3 class="text-sm font-bold work-text uppercase mb-4 tracking-tighter">Work Status (Weekly Limits)</h3>
                     <div class="space-y-4">
                         <div>
-                            <div class="flex justify-between text-[11px] mb-1"><span>Work Dine Out (Max 1k)</span><span id="w-dine-total">₱0</span></div>
-                            <div class="w-full bg-gray-200 h-1.5 rounded-full overflow-hidden"><div id="w-dine-bar" class="h-1.5" style="background:var(--work-brown)"></div></div>
+                            <div class="flex justify-between text-[11px] mb-1"><span>Dine Out (₱1k Max)</span><span id="w-dine-total">₱0</span></div>
+                            <div class="w-full bg-gray-200 h-1.5 rounded-full"><div id="w-dine-bar" class="h-1.5" style="background:var(--work-brown)"></div></div>
                         </div>
                         <div>
-                            <div class="flex justify-between text-[11px] mb-1"><span>Lunch Grocery (Max 1k)</span><span id="w-groc-total">₱0</span></div>
-                            <div class="w-full bg-gray-200 h-1.5 rounded-full overflow-hidden"><div id="w-groc-bar" class="h-1.5" style="background:var(--work-brown)"></div></div>
+                            <div class="flex justify-between text-[11px] mb-1"><span>Lunch Grocery (₱1k Max)</span><span id="w-groc-total">₱0</span></div>
+                            <div class="w-full bg-gray-200 h-1.5 rounded-full"><div id="w-groc-bar" class="h-1.5" style="background:var(--work-brown)"></div></div>
                         </div>
                         <div class="flex justify-between text-[11px] italic"><span>Work Transport:</span><span id="w-trans-total" class="font-bold">₱0</span></div>
                     </div>
                 </div>
 
                 <div class="cottage-card p-5 border-l-8 border-[var(--life-blue)]">
-                    <h3 class="text-sm font-bold life-text uppercase tracking-widest mb-2">Life Expenses</h3>
+                    <h3 class="text-sm font-bold life-text uppercase mb-2 tracking-tighter">Life Expenses Summary</h3>
                     <div class="space-y-1 text-[11px] max-h-40 overflow-y-auto pr-1">
                         <div class="flex justify-between border-b pb-1"><span>HH Food/Toil:</span><span id="l-hh" class="font-bold">₱0</span></div>
                         <div class="flex justify-between border-b pb-1"><span>Skincare/Makeup:</span><span id="l-beauty" class="font-bold">₱0</span></div>
                         <div class="flex justify-between border-b pb-1"><span>Shopping:</span><span id="l-shop" class="font-bold">₱0</span></div>
                         <div class="flex justify-between border-b pb-1"><span>Fam/Biz:</span><span id="l-fambiz" class="font-bold">₱0</span></div>
-                        <div class="flex justify-between pt-1 text-leaf font-bold"><span>Total Bills:</span><span id="l-bills">₱0</span></div>
+                        <div class="flex justify-between pt-1 text-leaf font-bold italic"><span>Total Bills:</span><span id="l-bills">₱0</span></div>
                     </div>
                 </div>
 
                 <div class="cottage-card p-5 border-l-8 border-[var(--clay)]">
-                    <h3 class="text-sm font-bold text-[var(--clay)] uppercase mb-4">Wishlist</h3>
+                    <h3 class="text-sm font-bold text-[var(--clay)] uppercase mb-4 tracking-tighter">My Wishlist</h3>
                     <div class="flex gap-2 mb-2">
-                        <input type="text" id="wish-name" class="flex-1 text-xs" placeholder="Item">
+                        <input type="text" id="wish-name" class="flex-1 text-xs" placeholder="What do you want?">
                         <input type="number" id="wish-price" class="w-20 text-xs" placeholder="₱">
                         <button onclick="addWish()" class="btn-leaf px-3">+</button>
                     </div>
@@ -153,15 +153,15 @@
                 </div>
             </div>
 
-            <!-- RIGHT: MEALS & CALENDAR (4/12) -->
+            <!-- RIGHT: MEALS & CALENDAR -->
             <div class="lg:col-span-4 space-y-6">
                 <div class="cottage-card p-5">
                     <h2 class="text-lg font-bold mb-4 italic text-center">Meal Planner</h2>
                     <div class="flex gap-2 mb-4">
-                        <input type="text" id="recipe-in" class="w-full text-xs" placeholder="New Meal...">
+                        <input type="text" id="recipe-in" class="w-full text-xs" placeholder="e.g. Hamburger">
                         <button onclick="addRecipe()" class="btn-leaf px-3">+</button>
                     </div>
-                    <div id="meal-list" class="space-y-3 max-h-56 overflow-y-auto"></div>
+                    <div id="meal-list" class="space-y-3 max-h-64 overflow-y-auto"></div>
                 </div>
 
                 <div class="cottage-card p-4">
@@ -175,7 +175,7 @@
         </div>
     </div>
 
-    <!-- MODALS -->
+    <!-- DAY MODAL -->
     <div id="dayModal" class="modal">
         <div class="flex items-center justify-center min-h-screen p-4">
             <div class="cottage-card p-6 w-full max-w-sm">
@@ -186,13 +186,35 @@
         </div>
     </div>
 
+    <!-- SYNC MODAL -->
     <div id="syncModal" class="modal">
         <div class="flex items-center justify-center min-h-screen p-4">
             <div class="cottage-card p-6 w-full max-w-md">
-                <h3 class="text-lg font-bold mb-2 italic">Sync Code</h3>
-                <textarea id="syncBox" class="w-full h-40 text-[10px] p-2 mb-4 border font-mono" readonly></textarea>
-                <button onclick="copySync()" class="w-full btn-leaf py-2 mb-2">Copy Code</button>
-                <button onclick="closeModal('syncModal')" class="w-full border border-leaf py-2 rounded-xl text-xs">Close</button>
+                <h3 class="text-lg font-bold mb-2 italic text-leaf">Sync Code</h3>
+                <p class="text-[10px] mb-2 opacity-70 italic">Copy this entire code to your other device.</p>
+                <textarea id="syncBox" class="w-full h-48 text-[9px] p-2 mb-4 border font-mono" readonly></textarea>
+                <button onclick="copySync()" class="w-full btn-leaf py-2 mb-2">Copy to Clipboard</button>
+                <button onclick="closeModal('syncModal')" class="w-full border border-leaf py-1 rounded-xl text-xs">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- RECEIPT MODAL -->
+    <div id="receiptModal" class="modal">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white p-8 w-full max-w-xs shadow-2xl relative border-t-8 border-leaf">
+                <div class="receipt-font text-[11px] text-black">
+                    <p class="text-center font-bold text-lg mb-1 uppercase tracking-tighter">Botanical Hub</p>
+                    <p class="text-center mb-6 text-[9px]">WEEKLY SPENDING RECEIPT</p>
+                    <p id="receipt-date" class="mb-4"></p>
+                    <div class="border-b border-dashed border-black mb-4"></div>
+                    <div id="receipt-items" class="space-y-2 mb-6"></div>
+                    <div class="border-b border-dashed border-black mb-4"></div>
+                    <div class="flex justify-between font-bold text-sm"><span>TOTAL:</span><span id="receipt-total">₱0</span></div>
+                    <p class="mt-10 text-center italic text-[9px]">--- END OF REPORT ---</p>
+                </div>
+                <button onclick="sendReceiptEmail()" class="w-full bg-forest text-white py-3 rounded font-bold text-xs mt-6">Email Receipt</button>
+                <button onclick="closeModal('receiptModal')" class="w-full text-gray-400 text-[10px] py-1 mt-2 underline">Dismiss</button>
             </div>
         </div>
     </div>
@@ -226,6 +248,8 @@
             updateUI();
             initCalendar();
             document.getElementById('current-date').innerText = now.toLocaleDateString('en-PH', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+            
+            if (now.getDay() === 0) document.getElementById('sunday-report-btn').style.display = 'block';
         });
 
         function updateSubCats() {
@@ -257,12 +281,10 @@
                 },
                 dateClick: (info) => showDayDetails(info.dateStr),
                 eventClick: (info) => {
-                    // Check if it's a custom event to allow deletion
                     const isCustom = data.customEvents.some(e => e.title === info.event.title && e.start === info.event.startStr);
                     if (isCustom && confirm(`Delete event "${info.event.title}"?`)) {
                         data.customEvents = data.customEvents.filter(e => !(e.title === info.event.title && e.start === info.event.startStr));
-                        saveData();
-                        calendar.refetchEvents();
+                        saveData(); calendar.refetchEvents();
                     }
                 }
             });
@@ -274,20 +296,21 @@
             if (!title) return;
             const date = prompt("Date (YYYY-MM-DD):", new Date().toISOString().split('T')[0]);
             if (!date) return;
-            data.customEvents.push({ title: title, start: date, color: '#B07D62', allDay: true });
-            saveData();
-            calendar.refetchEvents();
+            data.customEvents.push({ title, start: date, color: '#B07D62', allDay: true });
+            saveData(); calendar.refetchEvents();
         }
 
         function addExpense() {
             const amt = parseFloat(document.getElementById('log-amt').value);
             if (!amt) return;
-            const combinedDateTime = new Date(`${document.getElementById('log-date').value}T${document.getElementById('log-time').value}`);
+            const dateVal = document.getElementById('log-date').value;
+            const timeVal = document.getElementById('log-time').value;
+            const timestamp = new Date(`${dateVal}T${timeVal}`).getTime();
+            
             data.expenses.push({ 
                 main: document.getElementById('main-cat').value, 
                 sub: document.getElementById('sub-cat').value, 
-                amt, date: document.getElementById('log-date').value, 
-                timestamp: combinedDateTime.getTime() 
+                amt, date: dateVal, timestamp 
             });
             document.getElementById('log-amt').value = '';
             saveData(); updateUI();
@@ -298,7 +321,8 @@
             document.getElementById('sal-25').value = data.salaries.s25;
 
             let wDine = 0, wGroc = 0, wTrans = 0, lHH = 0, lBeauty = 0, lShop = 0, lFam = 0, lBills = 0;
-            const startOfWeek = new Date(new Date().setDate(new Date().getDate() - new Date().getDay())).setHours(0,0,0,0);
+            const now = new Date();
+            const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay())).setHours(0,0,0,0);
 
             data.expenses.forEach(e => {
                 if (e.timestamp >= startOfWeek) {
@@ -313,16 +337,16 @@
                 if (['water', 'elec', 'wifi', 'rent'].includes(e.sub)) lBills += e.amt;
             });
 
-            document.getElementById('w-dine-total').innerText = `₱${wDine}`;
+            document.getElementById('w-dine-total').innerText = `₱${wDine.toLocaleString()}`;
             document.getElementById('w-dine-bar').style.width = Math.min((wDine/1000)*100, 100) + '%';
-            document.getElementById('w-groc-total').innerText = `₱${wGroc}`;
+            document.getElementById('w-groc-total').innerText = `₱${wGroc.toLocaleString()}`;
             document.getElementById('w-groc-bar').style.width = Math.min((wGroc/1000)*100, 100) + '%';
-            document.getElementById('w-trans-total').innerText = `₱${wTrans}`;
-            document.getElementById('l-hh').innerText = `₱${lHH}`;
-            document.getElementById('l-beauty').innerText = `₱${lBeauty}`;
-            document.getElementById('l-shop').innerText = `₱${lShop}`;
-            document.getElementById('l-fambiz').innerText = `₱${lFam}`;
-            document.getElementById('l-bills').innerText = `₱${lBills}`;
+            document.getElementById('w-trans-total').innerText = `₱${wTrans.toLocaleString()}`;
+            document.getElementById('l-hh').innerText = `₱${lHH.toLocaleString()}`;
+            document.getElementById('l-beauty').innerText = `₱${lBeauty.toLocaleString()}`;
+            document.getElementById('l-shop').innerText = `₱${lShop.toLocaleString()}`;
+            document.getElementById('l-fambiz').innerText = `₱${lFam.toLocaleString()}`;
+            document.getElementById('l-bills').innerText = `₱${lBills.toLocaleString()}`;
 
             calculateCycleBalances();
             renderMeals();
@@ -353,10 +377,46 @@
             content.innerHTML = logs.length ? logs.map(e => `
                 <div class="flex justify-between border-b pb-1 text-[11px]">
                     <span class="${e.main === 'work' ? 'work-text' : 'life-text'}">${SUBS[e.main][e.sub]}</span>
-                    <span class="font-bold">₱${e.amt}</span>
+                    <span class="font-bold">₱${e.amt.toLocaleString()}</span>
                 </div>
-            `).join('') : '<p class="text-center opacity-40 py-4">No entries.</p>';
+            `).join('') : '<p class="text-center opacity-40 py-4 italic">No logs</p>';
             document.getElementById('dayModal').style.display = 'block';
+        }
+
+        function showWeeklyReceipt() {
+            const now = new Date();
+            const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay())).setHours(0,0,0,0);
+            const weeklyLogs = data.expenses.filter(e => e.timestamp >= startOfWeek);
+            let total = 0, itemsHtml = '';
+            
+            const summary = {};
+            weeklyLogs.forEach(e => {
+                const label = SUBS[e.main][e.sub];
+                summary[label] = (summary[label] || 0) + e.amt;
+                total += e.amt;
+            });
+
+            for (let key in summary) {
+                itemsHtml += `<div class="flex justify-between"><span>${key}</span><span>₱${summary[key].toLocaleString()}</span></div>`;
+            }
+
+            document.getElementById('receipt-items').innerHTML = itemsHtml || '<p class="text-center italic">No expenses logged.</p>';
+            document.getElementById('receipt-total').innerText = "₱" + total.toLocaleString();
+            document.getElementById('receipt-date').innerText = "PERIOD: " + new Date().toLocaleDateString();
+            document.getElementById('receiptModal').style.display = 'block';
+        }
+
+        function sendReceiptEmail() {
+            const total = document.getElementById('receipt-total').innerText;
+            const dateStr = document.getElementById('receipt-date').innerText;
+            let body = `Botanical Hub Weekly Receipt\n${dateStr}\n\n`;
+            const now = new Date();
+            const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay())).setHours(0,0,0,0);
+            data.expenses.filter(e => e.timestamp >= startOfWeek).forEach(e => {
+                body += `${SUBS[e.main][e.sub]}: ₱${e.amt}\n`;
+            });
+            body += `\nTOTAL: ${total}`;
+            window.location.href = `mailto:?subject=Weekly Receipt&body=${encodeURIComponent(body)}`;
         }
 
         function addWish() {
@@ -368,8 +428,8 @@
         }
         function renderWishlist() {
             const cont = document.getElementById('wish-list'); let t = 0;
-            cont.innerHTML = data.wishlist.map(w => { t += w.price; return `<li class="flex justify-between bg-white/40 p-2 rounded-lg group shadow-sm"><span>${w.name} - ₱${w.price}</span><button onclick="removeWish(${w.id})" class="text-over opacity-0 group-hover:opacity-100"><i class="fas fa-trash"></i></button></li>`; }).join('');
-            document.getElementById('wish-total').innerText = `₱${t}`;
+            cont.innerHTML = data.wishlist.map(w => { t += w.price; return `<li class="flex justify-between bg-white/40 p-2 rounded-lg group shadow-sm"><span>${w.name} - ₱${w.price.toLocaleString()}</span><button onclick="removeWish(${w.id})" class="text-over opacity-0 group-hover:opacity-100"><i class="fas fa-trash"></i></button></li>`; }).join('');
+            document.getElementById('wish-total').innerText = `₱${t.toLocaleString()}`;
         }
         function removeWish(id) { data.wishlist = data.wishlist.filter(w => w.id !== id); saveData(); renderWishlist(); }
 
@@ -392,26 +452,45 @@
                         <button onclick="removeMeal(${m.id})" class="text-[9px] text-over uppercase">Delete</button>
                     </div>
                     <div class="ml-4 space-y-1">
-                        ${m.ings.map((n, i) => `<div class="flex items-center gap-2 text-[10px]"><input type="checkbox" ${n.checked ? 'checked' : ''} onchange="toggleIng(${m.id}, ${i})" class="accent-leaf h-3 w-3"><span>${n.text}</span></div>`).join('')}
-                        <div class="flex gap-1 mt-1"><input id="ing-in-${m.id}" class="w-full text-[9px]" placeholder="+ ing"><button onclick="addIng(${m.id})" class="btn-leaf px-1">+</button></div>
+                        ${m.ings.map((n, i) => `<div class="flex items-center gap-2 text-[10px]"><input type="checkbox" ${n.checked ? 'checked' : ''} onchange="toggleIng(${m.id}, ${i})" class="accent-leaf h-3 w-3"><span class="${n.checked ? 'line-through opacity-50' : ''}">${n.text}</span></div>`).join('')}
+                        <div class="flex gap-1 mt-1"><input id="ing-in-${m.id}" class="w-full text-[9px]" placeholder="+ ingredient"><button onclick="addIng(${m.id})" class="btn-leaf px-1">+</button></div>
                     </div>
                 </div>
             `).join('');
         }
         function removeMeal(id) { data.meals = data.meals.filter(m => m.id !== id); saveData(); renderMeals(); }
-        function toggleIng(mId, i) { data.meals.find(x => x.id === mId).ings[i].checked = !data.meals.find(x => x.id === mId).ings[i].checked; saveData(); renderMeals(); }
+        function toggleIng(mId, i) { const m = data.meals.find(x => x.id === mId); m.ings[i].checked = !m.ings[i].checked; saveData(); renderMeals(); }
 
         function saveSalaries() { data.salaries.s10 = parseFloat(document.getElementById('sal-10').value) || 0; data.salaries.s25 = parseFloat(document.getElementById('sal-25').value) || 0; saveData(); calculateCycleBalances(); }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-        function saveData() { localStorage.setItem('botanical_vEvents', JSON.stringify(data)); }
+        
+        function saveData() { localStorage.setItem('botanical_vSundayFix', JSON.stringify(data)); }
         function loadData() { 
-            const saved = localStorage.getItem('botanical_vEvents'); 
+            const saved = localStorage.getItem('botanical_vSundayFix'); 
             if (saved) data = JSON.parse(saved); 
             if (!data.meals) data.meals = []; if (!data.wishlist) data.wishlist = []; if (!data.customEvents) data.customEvents = [];
         }
-        function exportData() { document.getElementById('syncBox').value = btoa(JSON.stringify(data)); document.getElementById('syncModal').style.display = 'block'; }
-        function copySync() { const b = document.getElementById('syncBox'); b.select(); navigator.clipboard.writeText(b.value); alert("Sync code copied!"); }
-        function importData() { const c = prompt("Paste Sync Code:"); if (c) { data = JSON.parse(atob(c)); saveData(); location.reload(); } }
+        
+        function exportData() {
+            const code = btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+            document.getElementById('syncBox').value = code;
+            document.getElementById('syncModal').style.display = 'block';
+        }
+        function copySync() {
+            const area = document.getElementById('syncBox');
+            area.select();
+            document.execCommand('copy');
+            alert("✅ Code copied!");
+        }
+        function importData() {
+            const code = prompt("Paste Restore Code:");
+            if (code) {
+                try {
+                    data = JSON.parse(decodeURIComponent(escape(atob(code))));
+                    saveData(); location.reload();
+                } catch(e) { alert("❌ Invalid code."); }
+            }
+        }
     </script>
 </body>
 </html>
